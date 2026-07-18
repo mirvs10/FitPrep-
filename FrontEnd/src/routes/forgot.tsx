@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { AuthLayout, Field } from "./login";
 
 export const Route = createFileRoute("/forgot")({
-  head: () => ({ meta: [{ title: "Recuperar contraseña — NutriFlow" }, { name: "description", content: "Recupera el acceso a tu cuenta NutriFlow." }] }),
+  head: () => ({ meta: [{ title: "Recuperar contraseña — FitPrep" }, { name: "description", content: "Recupera el acceso a tu cuenta FitPrep." }] }),
   component: Forgot,
 });
 

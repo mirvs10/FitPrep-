@@ -16,6 +16,8 @@ public class Plato {
     private Double carbohidratos;
     private Double grasas;
     private Boolean disponible;
+    private java.util.List<String> etiquetas;
+    private String imagenUrl;
 
     public Plato() {
         this.disponible = true;
@@ -23,7 +25,7 @@ public class Plato {
 
     public Plato(Long id, Integer negocioId, String nombre, String descripcion, Double precio,
                  Double calorias, Double proteinas, Double carbohidratos, Double grasas,
-                 Boolean disponible) {
+                 Boolean disponible, java.util.List<String> etiquetas, String imagenUrl) {
         this.id = id;
         this.negocioId = negocioId;
         this.nombre = nombre;
@@ -34,6 +36,8 @@ public class Plato {
         this.carbohidratos = carbohidratos;
         this.grasas = grasas;
         this.disponible = disponible != null ? disponible : true;
+        this.etiquetas = etiquetas;
+        this.imagenUrl = imagenUrl;
     }
 
     /**
@@ -49,6 +53,8 @@ public class Plato {
         this.carbohidratos = datosNuevos.carbohidratos;
         this.grasas = datosNuevos.grasas;
         this.disponible = datosNuevos.disponible != null ? datosNuevos.disponible : true;
+        this.etiquetas = datosNuevos.etiquetas;
+        this.imagenUrl = datosNuevos.imagenUrl;
     }
 
     /** Regla de negocio: descatalogar en lugar de eliminar. */
@@ -91,6 +97,12 @@ public class Plato {
     public Boolean getDisponible() { return disponible; }
     public void setDisponible(Boolean disponible) { this.disponible = disponible; }
 
+    public java.util.List<String> getEtiquetas() { return etiquetas; }
+    public void setEtiquetas(java.util.List<String> etiquetas) { this.etiquetas = etiquetas; }
+
+    public String getImagenUrl() { return imagenUrl; }
+    public void setImagenUrl(String imagenUrl) { this.imagenUrl = imagenUrl; }
+
     public static Builder builder() { return new Builder(); }
 
     public static class Builder {
@@ -105,6 +117,8 @@ public class Plato {
         public Builder carbohidratos(Double v) { p.carbohidratos = v; return this; }
         public Builder grasas(Double v) { p.grasas = v; return this; }
         public Builder disponible(Boolean v) { p.disponible = v; return this; }
+        public Builder etiquetas(java.util.List<String> v) { p.etiquetas = v; return this; }
+        public Builder imagenUrl(String v) { p.imagenUrl = v; return this; }
         public Plato build() { return p; }
     }
 }

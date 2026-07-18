@@ -1,14 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { MockupShell, PageHeader, Card, Donut, ProgressBar, KpiCard } from "@/components/mockup/Shell";
+import { AppShell, PageHeader, Card, Donut, ProgressBar, KpiCard } from "@/components/layout/Shell";
 
 export const Route = createFileRoute("/athlete/progress")({
-  head: () => ({ meta: [{ title: "Progreso — NutriFlow" }] }),
+  head: () => ({ meta: [{ title: "Progreso — FitPrep" }] }),
   component: Progress,
 });
 
 function Progress() {
   return (
-    <MockupShell breadcrumbs={["Atleta", "Progreso"]}>
+    <AppShell breadcrumbs={["Atleta", "Progreso"]}>
       <div className="p-8">
         <PageHeader eyebrow="Análisis" title="Progreso de macronutrientes" description="Visualiza tu evolución y ajusta tu plan en consecuencia." />
 
@@ -46,7 +46,7 @@ function Progress() {
           </Card>
         </div>
       </div>
-    </MockupShell>
+    </AppShell>
   );
 }
 function Row({ label, value, pct, tone }: { label: string; value: string; pct: number; tone: "brand"|"blue"|"amber" }) {

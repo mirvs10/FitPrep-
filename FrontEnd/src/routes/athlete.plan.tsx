@@ -2,11 +2,11 @@ import { createFileRoute, Link, useRouter, useBlocker, useNavigate } from "@tans
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { authService, planesService, platosService } from "../lib/api";
-import { MockupShell, PageHeader, Card, Btn, Badge, ProgressBar, Donut } from "@/components/mockup/Shell";
+import { AppShell, PageHeader, Card, Btn, Badge, ProgressBar, Donut } from "@/components/layout/Shell";
 import { Plus, ChevronLeft, ChevronRight, Trash2, X, Search, ArrowLeft } from "lucide-react";
 
 export const Route = createFileRoute("/athlete/plan")({
-  head: () => ({ meta: [{ title: "Planificación semanal — NutriFlow" }] }),
+  head: () => ({ meta: [{ title: "Planificación semanal — FitPrep" }] }),
   component: Plan,
 });
 
@@ -289,16 +289,16 @@ function Plan() {
 
   if (isPlanesLoading || isPlatosLoading) {
     return (
-      <MockupShell breadcrumbs={["Atleta", "Plan semanal"]}>
+      <AppShell breadcrumbs={["Atleta", "Plan semanal"]}>
         <div className="p-8 flex items-center justify-center min-h-[300px]">
           <span className="text-sm text-muted-foreground">Cargando tu plan y catálogo...</span>
         </div>
-      </MockupShell>
+      </AppShell>
     );
   }
 
   return (
-    <MockupShell breadcrumbs={["Atleta", "Plan semanal"]}>
+    <AppShell breadcrumbs={["Atleta", "Plan semanal"]}>
       <div className="p-8">
         <div className="flex items-center gap-4 mb-2">
           <button onClick={() => navigate({ to: "/athlete" })} className="p-2 -ml-2 rounded-full hover:bg-muted text-muted-foreground transition-colors cursor-pointer">
@@ -526,7 +526,11 @@ function Plan() {
                                   params={{ id: c.platoId.toString() }}
                                   className="flex items-center gap-4 p-3 rounded-xl border border-border bg-card hover:border-brand-500/30 transition-all relative group block text-left"
                                 >
-                                  <div className="size-12 rounded-lg bg-gradient-to-br from-brand-100 to-brand-50 shrink-0" />
+                                  {plato?.imagenUrl ? (
+                                    <img src={plato.imagenUrl} alt={plato.nombre} className="size-12 rounded-lg object-cover shrink-0" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                                  ) : (
+                                    <div className="size-12 rounded-lg bg-gradient-to-br from-brand-100 to-brand-50 shrink-0" />
+                                  )}
                                   <div className="flex-1 min-w-0">
                                     <h5 className="text-sm font-semibold truncate text-foreground pr-6 flex items-center gap-2">
                                       {plato?.nombre}
@@ -684,7 +688,11 @@ function Plan() {
                       const isSelected = selectedPlatoIdInModal === p.id;
                       return (
                         <li key={`rec-${p.id}`} className={`flex items-center gap-4 py-3 px-3 rounded-xl transition-colors ${isSelected ? "bg-brand-50/50 border border-brand-100" : "border border-transparent"}`}>
-                          <div className="size-12 rounded-lg bg-gradient-to-br from-brand-100 to-brand-50 shrink-0" />
+                          {p.imagenUrl ? (
+                            <img src={p.imagenUrl} alt={p.nombre} className="size-12 rounded-lg object-cover shrink-0" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                          ) : (
+                            <div className="size-12 rounded-lg bg-gradient-to-br from-brand-100 to-brand-50 shrink-0" />
+                          )}
                           <div className="flex-1 min-w-0">
                             <div className="text-sm font-semibold truncate text-foreground">{p.nombre}</div>
                             <div className="text-xs text-muted-foreground tabular-nums mt-0.5">
@@ -721,7 +729,11 @@ function Plan() {
                       const isSelected = selectedPlatoIdInModal === p.id;
                       return (
                         <li key={`fav-${p.id}`} className={`flex items-center gap-4 py-3 px-3 rounded-xl transition-colors ${isSelected ? "bg-brand-50/50 border border-brand-100" : "border border-transparent"}`}>
-                          <div className="size-12 rounded-lg bg-gradient-to-br from-brand-100 to-brand-50 shrink-0" />
+                          {p.imagenUrl ? (
+                            <img src={p.imagenUrl} alt={p.nombre} className="size-12 rounded-lg object-cover shrink-0" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                          ) : (
+                            <div className="size-12 rounded-lg bg-gradient-to-br from-brand-100 to-brand-50 shrink-0" />
+                          )}
                           <div className="flex-1 min-w-0">
                             <div className="text-sm font-semibold truncate text-foreground">{p.nombre}</div>
                             <div className="text-xs text-muted-foreground tabular-nums mt-0.5">
@@ -789,7 +801,7 @@ function Plan() {
           </div>
         </div>
       )}
-    </MockupShell>
+    </AppShell>
   );
 }
 

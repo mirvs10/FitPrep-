@@ -1,12 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { MockupShell, PageHeader, Card, Badge, Btn } from "@/components/mockup/Shell";
+import { AppShell, PageHeader, Card, Badge, Btn } from "@/components/layout/Shell";
 import { useQuery } from "@tanstack/react-query";
 import { planesService, PlanSemanalResponse, platosService } from "../lib/api";
 import { useState } from "react";
 import { X } from "lucide-react";
 
 export const Route = createFileRoute("/athlete/orders")({
-  head: () => ({ meta: [{ title: "Historial de pedidos — NutriFlow" }] }),
+  head: () => ({ meta: [{ title: "Historial de pedidos — FitPrep" }] }),
   component: Orders,
 });
 
@@ -24,7 +24,7 @@ function Orders() {
   });
 
   return (
-    <MockupShell breadcrumbs={["Atleta", "Historial"]}>
+    <AppShell breadcrumbs={["Atleta", "Historial"]}>
       <div className="p-8">
         <PageHeader 
           eyebrow="Historial" 
@@ -108,7 +108,11 @@ function Orders() {
                     const platoInfo = platos?.find(p => p.id === comida.platoId);
                     return (
                       <li key={index} className="flex flex-col sm:flex-row sm:items-center gap-4 py-3">
-                        <div className="size-12 rounded-lg bg-gradient-to-br from-brand-100 to-brand-50 shrink-0" />
+                        {platoInfo?.imagenUrl ? (
+                          <img src={platoInfo.imagenUrl} alt={platoInfo.nombre} className="size-12 rounded-lg object-cover shrink-0" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                        ) : (
+                          <div className="size-12 rounded-lg bg-gradient-to-br from-brand-100 to-brand-50 shrink-0" />
+                        )}
                         <div className="flex-1 min-w-0">
                           <div className="text-sm font-semibold truncate text-foreground">
                             {platoInfo ? platoInfo.nombre : `Plato #${comida.platoId}`}
@@ -142,6 +146,6 @@ function Orders() {
           </div>
         </div>
       )}
-    </MockupShell>
+    </AppShell>
   );
 }

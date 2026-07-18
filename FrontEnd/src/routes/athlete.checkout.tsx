@@ -2,11 +2,11 @@ import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { authService, platosService, planesService } from "../lib/api";
-import { MockupShell, PageHeader, Card, Btn } from "@/components/mockup/Shell";
+import { AppShell, PageHeader, Card, Btn } from "@/components/layout/Shell";
 import { CreditCard, Lock, Truck, ArrowLeft, CheckCircle } from "lucide-react";
 
 export const Route = createFileRoute("/athlete/checkout")({
-  head: () => ({ meta: [{ title: "Pago — NutriFlow" }] }),
+  head: () => ({ meta: [{ title: "Pago — FitPrep" }] }),
   component: Checkout,
 });
 
@@ -177,7 +177,7 @@ function Checkout() {
 
   if (pagadoExito) {
     return (
-      <MockupShell breadcrumbs={["Atleta", "Pago exitoso"]}>
+      <AppShell breadcrumbs={["Atleta", "Pago exitoso"]}>
         <div className="p-8 flex flex-col items-center justify-center min-h-[500px] text-center">
           <div className="size-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6">
             <CheckCircle className="size-10" />
@@ -190,22 +190,22 @@ function Checkout() {
             Redirigiendo a tu calendario...
           </div>
         </div>
-      </MockupShell>
+      </AppShell>
     );
   }
 
   if (isPlatosLoading) {
     return (
-      <MockupShell breadcrumbs={["Atleta", "Checkout"]}>
+      <AppShell breadcrumbs={["Atleta", "Checkout"]}>
         <div className="p-8 flex items-center justify-center min-h-[300px]">
           <span className="text-sm text-muted-foreground">Cargando detalles...</span>
         </div>
-      </MockupShell>
+      </AppShell>
     );
   }
 
   return (
-    <MockupShell breadcrumbs={["Atleta", "Checkout"]}>
+    <AppShell breadcrumbs={["Atleta", "Checkout"]}>
       <div className="p-8 max-w-5xl mx-auto">
         <PageHeader 
           eyebrow="Checkout Seguro" 
@@ -275,9 +275,8 @@ function Checkout() {
               </h3>
               <p className="text-sm text-muted-foreground mb-4">Tus comidas se entregarán diariamente por las mañanas en la siguiente dirección (puedes actualizar esto en tu perfil):</p>
               <div className="bg-card p-4 rounded-xl border border-border">
-                <div className="font-semibold text-sm">{usuario?.nombre}</div>
-                <div className="text-sm text-muted-foreground mt-1">Av. Las Palmas 123, Miraflores, Lima</div>
-                <div className="text-sm text-muted-foreground mt-1">Ref: Edificio blanco frente al parque</div>
+                <div className="font-semibold text-sm">{usuario?.nombres} {usuario?.apellidos}</div>
+                <div className="text-sm text-muted-foreground mt-1">{typeof window !== "undefined" ? localStorage.getItem("user_address") || "Dirección no configurada" : ""}</div>
               </div>
             </Card>
           </div>
@@ -335,6 +334,6 @@ function Checkout() {
           </div>
         </form>
       </div>
-    </MockupShell>
+    </AppShell>
   );
 }

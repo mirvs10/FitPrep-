@@ -2,11 +2,11 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { authService, platosService } from "../lib/api";
-import { MockupShell, PageHeader, Card, Btn } from "@/components/mockup/Shell";
+import { AppShell, PageHeader, Card, Btn } from "@/components/layout/Shell";
 import { Minus, Plus, Trash2, ArrowLeft, ShoppingBag } from "lucide-react";
 
 export const Route = createFileRoute("/athlete/cart")({
-  head: () => ({ meta: [{ title: "Carrito semanal — NutriFlow" }] }),
+  head: () => ({ meta: [{ title: "Carrito semanal — FitPrep" }] }),
   component: Cart,
 });
 
@@ -153,6 +153,7 @@ function Cart() {
         dias: item.dias.join(", "),
         cantidad: item.cantidad,
         precio,
+        imagenUrl: plato?.imagenUrl,
       };
     });
 
@@ -165,16 +166,16 @@ function Cart() {
 
   if (isPlatosLoading) {
     return (
-      <MockupShell breadcrumbs={["Atleta", "Carrito de Planes"]}>
+      <AppShell breadcrumbs={["Atleta", "Carrito de Planes"]}>
         <div className="p-8 flex items-center justify-center min-h-[300px]">
           <span className="text-sm text-muted-foreground">Cargando carrito...</span>
         </div>
-      </MockupShell>
+      </AppShell>
     );
   }
 
   return (
-    <MockupShell breadcrumbs={["Atleta", "Carrito de Planes"]}>
+    <AppShell breadcrumbs={["Atleta", "Carrito de Planes"]}>
       <div className="p-8 max-w-6xl mx-auto">
         <div className="flex items-center gap-4 mb-2">
           <button onClick={() => navigate({ to: "/athlete/plan" })} className="p-2 -ml-2 rounded-full hover:bg-muted text-muted-foreground transition-colors cursor-pointer">
@@ -199,7 +200,11 @@ function Cart() {
                     <ul className="divide-y divide-border">
                       {semana.items.map((item) => (
                         <li key={item.id} className="p-5 flex items-center gap-4 hover:bg-card/50 transition-colors">
-                          <div className="size-14 rounded-xl bg-gradient-to-br from-brand-100 to-brand-50 shrink-0" />
+                          {item.imagenUrl ? (
+                            <img src={item.imagenUrl} alt={item.nombre} className="size-14 rounded-xl object-cover shrink-0" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                          ) : (
+                            <div className="size-14 rounded-xl bg-gradient-to-br from-brand-100 to-brand-50 shrink-0" />
+                          )}
                           <div className="flex-1 min-w-0">
                             <div className="text-sm font-semibold truncate text-foreground">{item.nombre}</div>
                             <div className="text-xs text-muted-foreground mt-0.5">Días planificados: {item.dias}</div>
@@ -285,6 +290,6 @@ function Cart() {
           </Card>
         )}
       </div>
-    </MockupShell>
+    </AppShell>
   );
 }

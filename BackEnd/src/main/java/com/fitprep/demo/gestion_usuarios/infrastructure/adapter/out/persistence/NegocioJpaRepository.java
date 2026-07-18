@@ -6,4 +6,5 @@ import java.util.Optional;
 
 interface NegocioJpaRepository extends JpaRepository<NegocioEntity, Long> {
     Optional<NegocioEntity> findBySlug(String slug);
+    Optional<NegocioEntity> findByRuc(String ruc);
 }

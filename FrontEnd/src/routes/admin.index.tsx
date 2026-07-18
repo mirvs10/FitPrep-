@@ -1,10 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { adminService } from "../lib/api";
-import { MockupShell, PageHeader, Card, KpiCard, Btn, Badge } from "@/components/mockup/Shell";
+import { AppShell, PageHeader, Card, KpiCard, Btn, Badge } from "@/components/layout/Shell";
 
 export const Route = createFileRoute("/admin/")({
-  head: () => ({ meta: [{ title: "Admin SaaS — NutriFlow" }] }),
+  head: () => ({ meta: [{ title: "Admin SaaS — FitPrep" }] }),
   component: AdminDashboard,
 });
 
@@ -24,30 +24,30 @@ function AdminDashboard() {
 
   if (isLoading) {
     return (
-      <MockupShell breadcrumbs={["Admin SaaS", "Dashboard"]}>
+      <AppShell breadcrumbs={["Admin SaaS", "Dashboard"]}>
         <div className="p-8 flex items-center justify-center min-h-[300px]">
           <span className="text-sm text-muted-foreground">Cargando métricas de la plataforma...</span>
         </div>
-      </MockupShell>
+      </AppShell>
     );
   }
 
   if (error) {
     return (
-      <MockupShell breadcrumbs={["Admin SaaS", "Dashboard"]}>
+      <AppShell breadcrumbs={["Admin SaaS", "Dashboard"]}>
         <div className="p-8">
           <div className="p-4 rounded-lg bg-rose-50 border border-rose-100 text-rose-600 text-sm">
             Error al cargar las estadísticas de la plataforma. Asegúrate de estar autenticado como Administrador.
           </div>
         </div>
-      </MockupShell>
+      </AppShell>
     );
   }
 
   return (
-    <MockupShell breadcrumbs={["Admin SaaS", "Dashboard"]}>
+    <AppShell breadcrumbs={["Admin SaaS", "Dashboard"]}>
       <div className="p-8">
-        <PageHeader eyebrow="Plataforma · NutriFlow Cloud" title="Panel general" description="Vista ejecutiva de la salud de la plataforma." actions={<Btn>Generar reporte</Btn>} />
+        <PageHeader eyebrow="Plataforma • FitPrep Cloud" title="Panel general" description="Vista ejecutiva de la salud de la plataforma." />
         
         <div className="grid sm:grid-cols-4 gap-5 mb-6">
           <KpiCard label="Negocios activos" value={stats?.negociosActivos.toString() || "0"} delta="↑ En tiempo real" />
@@ -97,7 +97,7 @@ function AdminDashboard() {
           </Card>
         </div>
       </div>
-    </MockupShell>
+    </AppShell>
   );
 }
 

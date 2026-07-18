@@ -8,4 +8,5 @@ public interface EstadisticasPort {
     long countUsuariosTotales();
     List<Negocio> findNegociosNuevos();
     List<Negocio> findAllNegocios();
+    List<com.fitprep.demo.gestion_plataforma.domain.model.EstadisticaHistorica> getHistoricos();
 }

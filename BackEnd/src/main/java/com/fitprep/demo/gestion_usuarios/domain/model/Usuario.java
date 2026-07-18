@@ -17,9 +17,11 @@ public class Usuario {
     private Double reqProteinasG;
     private Double reqCarbohidratosG;
     private Double reqGrasasG;
+    private String estado;
 
     public Usuario() {
         this.rol = "ATHLETE";
+        this.estado = "ACTIVO";
     }
 
     public boolean passwordCoincide(String rawPassword, PasswordHasher hasher) {
@@ -86,6 +88,9 @@ public class Usuario {
     public Double getReqGrasasG() { return reqGrasasG; }
     public void setReqGrasasG(Double reqGrasasG) { this.reqGrasasG = reqGrasasG; }
 
+    public String getEstado() { return estado; }
+    public void setEstado(String estado) { this.estado = estado; }
+
     public static Builder builder() { return new Builder(); }
 
     public static class Builder {
@@ -102,6 +107,7 @@ public class Usuario {
         public Builder reqProteinasG(Double v) { u.reqProteinasG = v; return this; }
         public Builder reqCarbohidratosG(Double v) { u.reqCarbohidratosG = v; return this; }
         public Builder reqGrasasG(Double v) { u.reqGrasasG = v; return this; }
+        public Builder estado(String v) { u.estado = v; return this; }
         public Usuario build() { return u; }
     }
 }

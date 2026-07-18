@@ -49,4 +49,10 @@ public class PlatoEntity {
     @Column(name = "disponible", nullable = false)
     @Builder.Default
     private Boolean disponible = true;
+
+    @Column(name = "etiquetas")
+    private String etiquetas;
+
+    @Column(name = "imagen_url", length = 1000)
+    private String imagenUrl;
 }

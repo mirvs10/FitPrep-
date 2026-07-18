@@ -1,12 +1,12 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { MockupShell, Btn, Badge } from "@/components/mockup/Shell";
+import { AppShell, Btn, Badge } from "@/components/layout/Shell";
 import { Search, X } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { platosService, authService } from "@/lib/api";
 import { useState } from "react";
 
 export const Route = createFileRoute("/athlete/add-meal")({
-  head: () => ({ meta: [{ title: "Agregar comida - NutriFlow" }] }),
+  head: () => ({ meta: [{ title: "Agregar comida - FitPrep" }] }),
   component: AddMeal,
 });
 
@@ -30,7 +30,7 @@ function AddMeal() {
   ) || [];
 
   return (
-    <MockupShell breadcrumbs={["Atleta", "Plan", "Agregar comida"]}>
+    <AppShell breadcrumbs={["Atleta", "Plan", "Agregar comida"]}>
       <div className="p-8">
         <div className="rounded-2xl border border-border bg-card shadow-2xl shadow-foreground/5 max-w-3xl mx-auto overflow-hidden">
           <div className="px-6 h-14 flex items-center justify-between border-b border-border">
@@ -65,7 +65,11 @@ function AddMeal() {
                 ) : (
                   platosFiltrados.map((p) => (
                     <li key={p.id} className="flex items-center gap-4 py-3 px-2 rounded-lg hover:bg-muted/50 transition-colors">
-                      <div className="size-12 rounded-lg bg-gradient-to-br from-brand-100 to-brand-50 shrink-0" />
+                      {p.imagenUrl ? (
+                        <img src={p.imagenUrl} alt={p.nombre} className="size-12 rounded-lg object-cover shrink-0" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                      ) : (
+                        <div className="size-12 rounded-lg bg-gradient-to-br from-brand-100 to-brand-50 shrink-0" />
+                      )}
                       <div className="flex-1 min-w-0">
                         <div className="text-sm font-medium truncate">{p.nombre}</div>
                         <div className="text-xs text-muted-foreground tabular-nums mt-0.5">
@@ -90,6 +94,6 @@ function AddMeal() {
           </div>
         </div>
       </div>
-    </MockupShell>
+    </AppShell>
   );
 }

@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { platosService } from "../lib/api";
-import { MockupShell, PageHeader, Card, Btn } from "@/components/mockup/Shell";
+import { AppShell, PageHeader, Card, Btn } from "@/components/layout/Shell";
 import { ArrowLeft, Upload } from "lucide-react";
 
 export const Route = createFileRoute("/tenant/meals_/$id/edit")({
@@ -28,6 +28,8 @@ function EditMeal() {
   const [carbos, setCarbos] = useState("");
   const [grasas, setGrasas] = useState("");
   const [disponible, setDisponible] = useState(true);
+  const [imagenUrl, setImagenUrl] = useState("");
+  const [etiquetas, setEtiquetas] = useState<string[]>([]);
 
   useEffect(() => {
     if (plato) {
@@ -39,6 +41,8 @@ function EditMeal() {
       setCarbos(plato.carbohidratos?.toString() || "");
       setGrasas(plato.grasas?.toString() || "");
       setDisponible(plato.disponible);
+      setImagenUrl(plato.imagenUrl || "");
+      setEtiquetas(plato.etiquetas || []);
     }
   }, [plato]);
 
@@ -53,6 +57,8 @@ function EditMeal() {
         carbohidratos: Number(carbos),
         grasas: Number(grasas),
         disponible,
+        etiquetas,
+        imagenUrl,
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["misPlatosTenant"] });
@@ -68,16 +74,16 @@ function EditMeal() {
 
   if (isLoading) {
     return (
-      <MockupShell breadcrumbs={["FitKitchen", "Catálogo", "Cargando..."]}>
+      <AppShell breadcrumbs={["FitKitchen", "Catálogo", "Cargando..."]}>
         <div className="p-8 flex items-center justify-center min-h-[300px]">
           <span className="text-sm text-muted-foreground">Cargando datos del plato...</span>
         </div>
-      </MockupShell>
+      </AppShell>
     );
   }
 
   return (
-    <MockupShell breadcrumbs={["FitKitchen", "Catálogo", "Editar", nombre]}>
+    <AppShell breadcrumbs={["FitKitchen", "Catálogo", "Editar", nombre]}>
       <div className="p-8 max-w-5xl">
         <div className="flex items-center gap-4 mb-2">
           <Link to="/tenant/meals" className="p-2 -ml-2 rounded-full hover:bg-muted text-muted-foreground transition-colors cursor-pointer">
@@ -137,19 +143,35 @@ function EditMeal() {
               </Btn>
             </Card>
             <Card className="p-6">
-              <h3 className="text-sm font-semibold mb-4">Foto</h3>
-              <div className="aspect-square rounded-xl border-2 border-dashed border-border grid place-items-center text-muted-foreground hover:border-brand-500 hover:text-brand-600 cursor-pointer">
-                <div className="text-center">
-                  <Upload className="size-6 mx-auto mb-2" />
-                  <div className="text-xs">Sube una imagen</div>
-                  <div className="text-[10px] mt-1">PNG, JPG hasta 5MB</div>
+              <h3 className="text-sm font-semibold mb-4">Foto (URL)</h3>
+              <Field label="URL de la imagen" placeholder="https://ejemplo.com/foto.jpg" value={imagenUrl} onChange={e => setImagenUrl(e.target.value)} />
+              {imagenUrl && (
+                <div className="mt-4 aspect-video rounded-xl border border-border overflow-hidden bg-muted">
+                  <img src={imagenUrl} alt="Preview" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = 'https://placehold.co/600x400/e2e8f0/64748b?text=Error+cargando+imagen' }} />
                 </div>
+              )}
+            </Card>
+            <Card className="p-6">
+              <h3 className="text-sm font-semibold mb-4">Etiquetas</h3>
+              <div className="flex flex-wrap gap-2">
+                {["Alto proteína","Sin gluten","Vegano","Low-carb","Keto"].map((t) => {
+                  const isSelected = etiquetas.includes(t);
+                  return (
+                    <button 
+                      key={t}
+                      onClick={() => setEtiquetas(prev => isSelected ? prev.filter(e => e !== t) : [...prev, t])}
+                      className={`px-3 h-7 rounded-full text-xs font-medium border transition-colors ${isSelected ? "bg-brand-500 text-white border-brand-500" : "bg-card text-foreground border-border hover:border-brand-500"}`}
+                    >
+                      {t}
+                    </button>
+                  );
+                })}
               </div>
             </Card>
           </div>
         </div>
       </div>
-    </MockupShell>
+    </AppShell>
   );
 }
 

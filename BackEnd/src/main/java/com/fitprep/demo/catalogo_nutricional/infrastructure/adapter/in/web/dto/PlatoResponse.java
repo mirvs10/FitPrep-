@@ -18,4 +18,6 @@ public class PlatoResponse {
     private Double carbohidratos;
     private Double grasas;
     private Boolean disponible;
+    private java.util.List<String> etiquetas;
+    private String imagenUrl;
 }

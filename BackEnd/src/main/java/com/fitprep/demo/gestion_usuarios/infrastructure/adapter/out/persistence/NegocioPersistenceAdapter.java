@@ -26,6 +26,11 @@ public class NegocioPersistenceAdapter implements NegocioRepositoryPort {
     }
 
     @Override
+    public Optional<Negocio> findByRuc(String ruc) {
+        return jpaRepository.findByRuc(ruc).map(NegocioMapper::toDomain);
+    }
+
+    @Override
     public java.util.List<Negocio> findAll() {
         return jpaRepository.findAll().stream().map(NegocioMapper::toDomain).collect(java.util.stream.Collectors.toList());
     }

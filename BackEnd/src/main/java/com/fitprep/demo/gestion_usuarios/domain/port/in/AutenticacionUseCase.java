@@ -12,7 +12,7 @@ public interface AutenticacionUseCase {
 
     Usuario registrarUsuario(RegistroUsuarioCommand command, String rol);
 
-    Negocio registrarNegocio(RegistroNegocioCommand command);
+    ResultadoLogin registrarNegocio(RegistroNegocioCommand command);
 
     Usuario obtenerPerfilPorEmail(String email);
 
@@ -52,7 +52,11 @@ public interface AutenticacionUseCase {
             String nombreComercial,
             String slug,
             String ruc,
-            String telefono
+            String telefono,
+            String email,
+            String password,
+            String plan,
+            String metodoPago
     ) {
     }
 }

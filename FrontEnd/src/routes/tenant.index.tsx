@@ -1,11 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { MockupShell, PageHeader, Card, KpiCard, Btn, Badge } from "@/components/mockup/Shell";
+import { AppShell, PageHeader, Card, KpiCard, Btn, Badge } from "@/components/layout/Shell";
 import { Download, TrendingUp, Plus } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { tenantService } from "@/lib/api";
 
 export const Route = createFileRoute("/tenant/")({
-  head: () => ({ meta: [{ title: "Panel · FitKitchen — NutriFlow" }] }),
+  head: () => ({ meta: [{ title: "Panel · FitKitchen — FitPrep" }] }),
   component: TenantDashboard,
 });
 
@@ -22,7 +22,7 @@ function TenantDashboard() {
     : "Mi Negocio";
 
   return (
-    <MockupShell breadcrumbs={[businessName || "Negocio", "Dashboard"]}>
+    <AppShell breadcrumbs={[businessName || "Negocio", "Dashboard"]}>
       <div className="p-8">
         <PageHeader eyebrow={businessName} title="Panel de control" description="Resumen ejecutivo de tu cocina, pedidos y operación semanal." actions={<><Link to="/tenant/meals/new"><Btn><Plus className="size-3.5" /> Crear comida</Btn></Link></>} />
 
@@ -86,7 +86,6 @@ function TenantDashboard() {
           <Card className="p-6 lg:col-span-3 overflow-hidden">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-semibold">Pedidos recientes</h3>
-              <Link to="/tenant/orders" className="text-xs text-brand-600 font-medium hover:underline">Ver todos los pedidos</Link>
             </div>
             <table className="w-full text-sm">
               <thead className="text-[10px] uppercase tracking-widest text-muted-foreground">
@@ -112,6 +111,6 @@ function TenantDashboard() {
           </Card>
         </div>
       </div>
-    </MockupShell>
+    </AppShell>
   );
 }

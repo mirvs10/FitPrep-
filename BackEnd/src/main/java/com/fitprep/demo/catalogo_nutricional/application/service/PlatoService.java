@@ -61,6 +61,7 @@ public class PlatoService implements GestionarPlatoUseCase {
         Plato plato = platoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Plato no encontrado con ID: " + id));
 
-        platoRepository.delete(plato);
+        plato.setDisponible(false);
+        platoRepository.save(plato);
     }
 }

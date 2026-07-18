@@ -12,4 +12,8 @@ public class RegisterNegocioRequest {
     private String slug;
     private String ruc;
     private String telefono;
+    private String email;
+    private String password;
+    private String plan;
+    private String metodoPago;
 }

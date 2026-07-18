@@ -93,8 +93,10 @@ La base de datos se inicializa con dos usuarios por defecto para que pruebes los
 
 | Rol | Correo Electrónico | Contraseña | Descripción |
 | :--- | :--- | :--- | :--- |
-| **TENANT (Cocina)** | `admin@fitprep.com` | `password123` | Puede crear platos, actualizar la cocina y ver su propia información. |
-| **ATHLETE (Cliente)** | `atleta@fitprep.com` | `password123` | Puede agendar platos de su plan semanal o comprar vía e-commerce. |
+| **ADMIN (SaaS)** | `admin@fitprep.com` | `password123` | Panel Global. Gestiona Restaurantes y Usuarios. |
+| **TENANT (Restaurante 1)** | `coffeefit@gmail.com` | `password123` | Restaurante CoffeeFit (Tiene platos creados). |
+| **TENANT (Restaurante 2)** | `primefit@gmail.com` | `password123` | Restaurante PrimeFit (Tiene platos creados). |
+| **ATHLETE (Cliente)** | `user1@gmail.com` | `password123` | Puede ver ambos restaurantes y realizar pedidos. |
 
 ---
 

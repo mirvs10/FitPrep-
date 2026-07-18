@@ -15,4 +15,15 @@ interface UsuarioJpaRepository extends JpaRepository<UsuarioEntity, Long> {
 
     @Query(value = "SELECT * FROM usuario WHERE rol = :rol ORDER BY nombres ASC", nativeQuery = true)
     List<UsuarioEntity> findAllByRolIgnoringTenant(@Param("rol") String rol);
+
+    @Query(value = "SELECT * FROM usuario ORDER BY id DESC", nativeQuery = true)
+    List<UsuarioEntity> findAllIgnoringTenant();
+
+    @org.springframework.data.jpa.repository.Modifying
+    @Query(value = "INSERT INTO usuario (negocio_id, nombres, apellidos, email, password_hash, rol) VALUES (:#{#u.negocioId}, :#{#u.nombres}, :#{#u.apellidos}, :#{#u.email}, :#{#u.passwordHash}, :#{#u.rol})", nativeQuery = true)
+    void insertNative(@Param("u") UsuarioEntity u);
+
+    @org.springframework.data.jpa.repository.Modifying
+    @Query(value = "UPDATE usuario SET estado = 'INACTIVO' WHERE id = :id", nativeQuery = true)
+    void deleteByIdIgnoringTenant(@Param("id") Long id);
 }

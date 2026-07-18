@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { MockupShell, PageHeader, Card, Btn, Badge, KpiCard } from "@/components/mockup/Shell";
+import { AppShell, PageHeader, Card, Btn, Badge, KpiCard } from "@/components/layout/Shell";
 import { useQuery } from "@tanstack/react-query";
 import { tenantService } from "@/lib/api";
 import { useMemo } from "react";
@@ -51,7 +51,7 @@ function Orders() {
   const { matrix, totalPorciones } = agruparPorciones();
 
   return (
-    <MockupShell breadcrumbs={["FitKitchen", "Pedidos semanales"]}>
+    <AppShell breadcrumbs={["FitKitchen", "Pedidos semanales"]}>
       <div className="p-8">
         <PageHeader backTo="/tenant" eyebrow={`Semana del ${fechaSemana}`} title="Pedidos semanales" description="Vista consolidada de demanda por día." actions={<Btn>Exportar plan</Btn>} />
         <div className="grid sm:grid-cols-4 gap-5 mb-6">
@@ -87,6 +87,6 @@ function Orders() {
           </div>
         </Card>
       </div>
-    </MockupShell>
+    </AppShell>
   );
 }

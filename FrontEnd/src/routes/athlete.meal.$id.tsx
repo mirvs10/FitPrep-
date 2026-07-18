@@ -2,11 +2,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { platosService, authService } from "../lib/api";
 import { useState, useEffect } from "react";
-import { MockupShell, Card, Btn, Badge, ProgressBar } from "@/components/mockup/Shell";
-import { Star, Clock, Flame, Heart } from "lucide-react";
+import { AppShell, Card, Btn, Badge, ProgressBar } from "@/components/layout/Shell";
+import { Star, Clock, Flame, Heart, ArrowLeft } from "lucide-react";
 
 export const Route = createFileRoute("/athlete/meal/$id")({
-  head: () => ({ meta: [{ title: "Detalle de comida — NutriFlow" }] }),
+  head: () => ({ meta: [{ title: "Detalle de comida — FitPrep" }] }),
   component: MealDetail,
 });
 
@@ -55,17 +55,17 @@ function MealDetail() {
 
   if (isLoading) {
     return (
-      <MockupShell breadcrumbs={["Catálogo", "Detalle"]}>
+      <AppShell breadcrumbs={["Catálogo", "Detalle"]}>
         <div className="p-8 flex items-center justify-center min-h-[300px]">
           <span className="text-sm text-muted-foreground">Cargando detalle del plato...</span>
         </div>
-      </MockupShell>
+      </AppShell>
     );
   }
 
   if (error || !plato) {
     return (
-      <MockupShell breadcrumbs={["Catálogo", "Error"]}>
+      <AppShell breadcrumbs={["Catálogo", "Error"]}>
         <div className="p-8">
           <div className="p-4 rounded-lg bg-rose-50 border border-rose-100 text-rose-600 text-sm">
             Error al cargar la información de la comida o plato no encontrado.
@@ -74,26 +74,38 @@ function MealDetail() {
             <Btn variant="outline">Volver a planificación</Btn>
           </Link>
         </div>
-      </MockupShell>
+      </AppShell>
     );
   }
 
   return (
-    <MockupShell breadcrumbs={["Catálogo", plato.nombre]}>
+    <AppShell breadcrumbs={["Catálogo", plato.nombre]}>
       <div className="p-8 max-w-6xl mx-auto">
+        <div className="flex items-center gap-4 mb-4">
+          <Link to=".." className="p-2 -ml-2 rounded-full hover:bg-muted text-muted-foreground transition-colors cursor-pointer" onClick={(e) => { e.preventDefault(); window.history.back(); }}>
+            <ArrowLeft className="size-5" />
+          </Link>
+          <div className="text-[11px] font-semibold uppercase tracking-widest text-brand-600">Atrás</div>
+        </div>
         <div className="grid lg:grid-cols-5 gap-8">
           <div className="lg:col-span-2">
-            <div className="aspect-square rounded-2xl bg-gradient-to-br from-brand-100 to-brand-50 border border-border" />
-            <div className="grid grid-cols-4 gap-2 mt-3">
-              {[1, 2, 3, 4].map(i => <div key={i} className="aspect-square rounded-lg bg-gradient-to-br from-brand-55 to-muted border border-border" />)}
+            <div className="aspect-square rounded-2xl bg-muted border border-border overflow-hidden">
+              {plato.imagenUrl ? (
+                <img src={plato.imagenUrl} alt={plato.nombre} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+              ) : (
+                <div className="w-full h-full bg-gradient-to-br from-brand-100 to-brand-50" />
+              )}
             </div>
           </div>
           
           <div className="lg:col-span-3">
-            <div className="flex items-center gap-2 mb-3">
+            <div className="flex items-center gap-2 mb-3 flex-wrap">
               <Badge tone="brand">Comida Saludable</Badge>
-              {plato.proteinas >= 30 && <Badge>Alto en proteína</Badge>}
-              {plato.carbohidratos <= 20 && <Badge>Bajo en carbos</Badge>}
+              {plato.etiquetas?.map(tag => (
+                <Badge key={tag}>{tag}</Badge>
+              ))}
+              {(!plato.etiquetas || plato.etiquetas.length === 0) && plato.proteinas >= 30 && <Badge>Alto en proteína</Badge>}
+              {(!plato.etiquetas || plato.etiquetas.length === 0) && plato.carbohidratos <= 20 && <Badge>Bajo en carbos</Badge>}
               {!plato.disponible && <Badge tone="neutral">No disponible</Badge>}
             </div>
             
@@ -141,7 +153,7 @@ function MealDetail() {
           </div>
         </div>
       </div>
-    </MockupShell>
+    </AppShell>
   );
 }
 

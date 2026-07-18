@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { MockupShell, PageHeader, Card, Btn } from "@/components/mockup/Shell";
+import { AppShell, PageHeader, Card, Btn } from "@/components/layout/Shell";
 
 export const Route = createFileRoute("/athlete/settings")({
-  head: () => ({ meta: [{ title: "Configuración — NutriFlow" }] }),
+  head: () => ({ meta: [{ title: "Configuración — FitPrep" }] }),
   component: Settings,
 });
 
@@ -14,7 +14,7 @@ const sections = [
 
 function Settings() {
   return (
-    <MockupShell breadcrumbs={["Atleta", "Configuración"]}>
+    <AppShell breadcrumbs={["Atleta", "Configuración"]}>
       <div className="p-8 max-w-3xl mx-auto">
         <PageHeader title="Configuración de cuenta" description="Personaliza tu experiencia y privacidad." />
         <div className="space-y-5">
@@ -40,6 +40,6 @@ function Settings() {
           </Card>
         </div>
       </div>
-    </MockupShell>
+    </AppShell>
   );
 }

@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { MockupShell, PageHeader, Card, KpiCard } from "@/components/mockup/Shell";
+import { AppShell, PageHeader, Card, KpiCard } from "@/components/layout/Shell";
 import { TrendingUp, Utensils, ShoppingBag } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { tenantService } from "@/lib/api";
@@ -16,7 +16,7 @@ function Reports() {
   });
 
   return (
-    <MockupShell breadcrumbs={["FitKitchen", "Reportes"]}>
+    <AppShell breadcrumbs={["FitKitchen", "Reportes"]}>
       <div className="p-8">
         <PageHeader backTo="/tenant" eyebrow="Inteligencia de negocio" title="Reporte Ejecutivo (Últimos 30 días)" description="Métricas de rendimiento generadas automáticamente por el sistema." />
         
@@ -51,6 +51,6 @@ function Reports() {
           </div>
         )}
       </div>
-    </MockupShell>
+    </AppShell>
   );
 }

@@ -1,11 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { authService, planesService, platosService } from "../lib/api";
-import { MockupShell, PageHeader, Card, Btn, Badge, KpiCard, ProgressBar, Donut } from "@/components/mockup/Shell";
+import { AppShell, PageHeader, Card, Btn, Badge, KpiCard, ProgressBar, Donut } from "@/components/layout/Shell";
 import { Flame, Trophy, CalendarDays, ChevronRight, MapPin, Star, Building2 } from "lucide-react";
 
 export const Route = createFileRoute("/athlete/")({
-  head: () => ({ meta: [{ title: "Mi panel — NutriFlow" }] }),
+  head: () => ({ meta: [{ title: "Mi panel — FitPrep" }] }),
   component: AthleteDashboard,
 });
 
@@ -30,11 +30,11 @@ function AthleteDashboard() {
 
   if (isUserLoading || isPlansLoading || isPlatosLoading) {
     return (
-      <MockupShell breadcrumbs={["Atleta", "Dashboard"]}>
+      <AppShell breadcrumbs={["Atleta", "Dashboard"]}>
         <div className="p-8 flex items-center justify-center min-h-[300px]">
           <span className="text-sm text-muted-foreground">Cargando tu panel de control...</span>
         </div>
-      </MockupShell>
+      </AppShell>
     );
   }
 
@@ -120,7 +120,7 @@ function AthleteDashboard() {
   const userName = usuario?.nombres || "Atleta";
 
   return (
-    <MockupShell breadcrumbs={["Atleta", "Dashboard"]}>
+    <AppShell breadcrumbs={["Atleta", "Dashboard"]}>
       <div className="p-8">
         <PageHeader 
           eyebrow={`Buenos días, ${userName} 👋`} 
@@ -229,7 +229,7 @@ function AthleteDashboard() {
           </Card>
         </div>
       </div>
-    </MockupShell>
+    </AppShell>
   );
 }
 

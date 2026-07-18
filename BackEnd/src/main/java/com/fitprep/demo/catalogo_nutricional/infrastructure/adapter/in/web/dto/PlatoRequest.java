@@ -17,4 +17,6 @@ public class PlatoRequest {
     private Double grasas;
     @Builder.Default
     private Boolean disponible = true;
+    private java.util.List<String> etiquetas;
+    private String imagenUrl;
 }

@@ -65,10 +65,17 @@ public class AuthController {
                     request.getNombreComercial(),
                     request.getSlug(),
                     request.getRuc(),
-                    request.getTelefono()
+                    request.getTelefono(),
+                    request.getEmail(),
+                    request.getPassword(),
+                    request.getPlan(),
+                    request.getMetodoPago()
             );
-            Negocio negocio = autenticacion.registrarNegocio(command);
-            return ResponseEntity.status(HttpStatus.CREATED).body(mapToNegocioResponse(negocio));
+            
+            // Now registrarNegocio should return ResultadoLogin (the admin user and token)
+            AutenticacionUseCase.ResultadoLogin resultado = autenticacion.registrarNegocio(command);
+            
+            return ResponseEntity.status(HttpStatus.CREATED).body(mapToAuthResponse(resultado.usuario(), resultado.token()));
         } catch (IllegalArgumentException e) {
             return errorBody("Error de Registro de Negocio", e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -145,10 +152,15 @@ public class AuthController {
      */
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Map<String, Object>> handleDataIntegrity(DataIntegrityViolationException ex) {
+        String details = ex.getMessage();
+        if (ex.getRootCause() != null) {
+            details += " | Root cause: " + ex.getRootCause().getMessage();
+        }
         return errorBody(
                 "Datos en conflicto",
-                "El registro no se pudo completar: es posible que algún dato único (RUC, slug o email) ya exista o no sea válido.",
-                HttpStatus.CONFLICT);
+                "El registro no se pudo completar. Detalles: " + details,
+                HttpStatus.CONFLICT
+        );
     }
 
     private ResponseEntity<Map<String, Object>> errorBody(String error, String message, HttpStatus status) {

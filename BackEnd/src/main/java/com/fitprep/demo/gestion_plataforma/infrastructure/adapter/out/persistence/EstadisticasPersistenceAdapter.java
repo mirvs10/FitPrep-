@@ -15,6 +15,12 @@ public class EstadisticasPersistenceAdapter implements EstadisticasPort {
 
     @PersistenceContext
     private EntityManager entityManager;
+    
+    private final EstadisticaHistoricaJpaRepository historicaJpaRepository;
+
+    public EstadisticasPersistenceAdapter(EstadisticaHistoricaJpaRepository historicaJpaRepository) {
+        this.historicaJpaRepository = historicaJpaRepository;
+    }
 
     @Override
     public long countNegociosActivos() {
@@ -26,7 +32,8 @@ public class EstadisticasPersistenceAdapter implements EstadisticasPort {
     @Override
     public long countUsuariosTotales() {
         // Usamos una consulta nativa para evitar que Hibernate aplique el filtro @TenantId
-        Object result = entityManager.createNativeQuery("SELECT COUNT(*) FROM usuario").getSingleResult();
+        // Excluimos al SuperAdmin
+        Object result = entityManager.createNativeQuery("SELECT COUNT(*) FROM usuario WHERE rol != 'ADMIN'").getSingleResult();
         return ((Number) result).longValue();
     }
 
@@ -62,5 +69,18 @@ public class EstadisticasPersistenceAdapter implements EstadisticasPort {
                 .ciudad(entity.getCiudad())
                 .fechaRegistro(entity.getFechaRegistro())
                 .build();
+    }
+
+    @Override
+    public List<com.fitprep.demo.gestion_plataforma.domain.model.EstadisticaHistorica> getHistoricos() {
+        return historicaJpaRepository.findAllByOrderByFechaAsc().stream()
+                .map(entity -> com.fitprep.demo.gestion_plataforma.domain.model.EstadisticaHistorica.builder()
+                        .id(entity.getId())
+                        .fecha(entity.getFecha())
+                        .mrr(entity.getMrr())
+                        .churnRate(entity.getChurnRate())
+                        .nuevosNegocios(entity.getNuevosNegocios())
+                        .build())
+                .collect(Collectors.toList());
     }
 }

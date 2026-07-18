@@ -33,7 +33,6 @@ import { Route as AthleteCartRouteImport } from './routes/athlete.cart'
 import { Route as AthleteAddMealRouteImport } from './routes/athlete.add-meal'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminSubscriptionsRouteImport } from './routes/admin.subscriptions'
-import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminReportsRouteImport } from './routes/admin.reports'
 import { Route as AdminBusinessesRouteImport } from './routes/admin.businesses'
 import { Route as TenantsSlugIndexRouteImport } from './routes/tenants.$slug.index'
@@ -162,11 +161,6 @@ const AdminSubscriptionsRoute = AdminSubscriptionsRouteImport.update({
   path: '/admin/subscriptions',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminSettingsRoute = AdminSettingsRouteImport.update({
-  id: '/admin/settings',
-  path: '/admin/settings',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AdminReportsRoute = AdminReportsRouteImport.update({
   id: '/admin/reports',
   path: '/admin/reports',
@@ -210,7 +204,6 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterRoute
   '/admin/businesses': typeof AdminBusinessesRoute
   '/admin/reports': typeof AdminReportsRoute
-  '/admin/settings': typeof AdminSettingsRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/users': typeof AdminUsersRoute
   '/athlete/add-meal': typeof AthleteAddMealRoute
@@ -244,7 +237,6 @@ export interface FileRoutesByTo {
   '/register': typeof RegisterRoute
   '/admin/businesses': typeof AdminBusinessesRoute
   '/admin/reports': typeof AdminReportsRoute
-  '/admin/settings': typeof AdminSettingsRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/users': typeof AdminUsersRoute
   '/athlete/add-meal': typeof AthleteAddMealRoute
@@ -279,7 +271,6 @@ export interface FileRoutesById {
   '/register': typeof RegisterRoute
   '/admin/businesses': typeof AdminBusinessesRoute
   '/admin/reports': typeof AdminReportsRoute
-  '/admin/settings': typeof AdminSettingsRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/users': typeof AdminUsersRoute
   '/athlete/add-meal': typeof AthleteAddMealRoute
@@ -315,7 +306,6 @@ export interface FileRouteTypes {
     | '/register'
     | '/admin/businesses'
     | '/admin/reports'
-    | '/admin/settings'
     | '/admin/subscriptions'
     | '/admin/users'
     | '/athlete/add-meal'
@@ -349,7 +339,6 @@ export interface FileRouteTypes {
     | '/register'
     | '/admin/businesses'
     | '/admin/reports'
-    | '/admin/settings'
     | '/admin/subscriptions'
     | '/admin/users'
     | '/athlete/add-meal'
@@ -383,7 +372,6 @@ export interface FileRouteTypes {
     | '/register'
     | '/admin/businesses'
     | '/admin/reports'
-    | '/admin/settings'
     | '/admin/subscriptions'
     | '/admin/users'
     | '/athlete/add-meal'
@@ -418,7 +406,6 @@ export interface RootRouteChildren {
   RegisterRoute: typeof RegisterRoute
   AdminBusinessesRoute: typeof AdminBusinessesRoute
   AdminReportsRoute: typeof AdminReportsRoute
-  AdminSettingsRoute: typeof AdminSettingsRoute
   AdminSubscriptionsRoute: typeof AdminSubscriptionsRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AthleteAddMealRoute: typeof AthleteAddMealRoute
@@ -616,13 +603,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSubscriptionsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/settings': {
-      id: '/admin/settings'
-      path: '/admin/settings'
-      fullPath: '/admin/settings'
-      preLoaderRoute: typeof AdminSettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/admin/reports': {
       id: '/admin/reports'
       path: '/admin/reports'
@@ -682,7 +662,6 @@ const rootRouteChildren: RootRouteChildren = {
   RegisterRoute: RegisterRoute,
   AdminBusinessesRoute: AdminBusinessesRoute,
   AdminReportsRoute: AdminReportsRoute,
-  AdminSettingsRoute: AdminSettingsRoute,
   AdminSubscriptionsRoute: AdminSubscriptionsRoute,
   AdminUsersRoute: AdminUsersRoute,
   AthleteAddMealRoute: AthleteAddMealRoute,

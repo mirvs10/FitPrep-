@@ -55,8 +55,8 @@ public class TenantCrmController {
         Map<Long, List<PedidoEcommerce>> pedidosPorUsuario = pedidos.stream()
                 .collect(Collectors.groupingBy(PedidoEcommerce::getUsuarioId));
 
-        // Obtener la información de los usuarios (Atletas)
-        List<Usuario> todosLosDeportistas = gestionarClientesUseCase.listarDeportistas();
+        // Obtener la información de los usuarios (Atletas) a nivel global
+        List<Usuario> todosLosDeportistas = gestionarClientesUseCase.listarTodosLosDeportistasCrossTenant();
 
         List<TenantCrmResponse> clientes = new ArrayList<>();
 
@@ -139,7 +139,7 @@ public class TenantCrmController {
 
         // Ventas Semanales
         double ventasSemanales = pedidos.stream()
-                .filter(p -> p.getFechaCreacion().isAfter(hace7Dias) && p.getEstado().equals("PAGADO"))
+                .filter(p -> p.getFechaCreacion().isAfter(hace7Dias) && (p.getEstado().equals("PAGADO") || p.getEstado().equals("ENTREGADO")))
                 .mapToDouble(PedidoEcommerce::getMontoTotal)
                 .sum();
 
@@ -177,7 +177,7 @@ public class TenantCrmController {
                 .collect(Collectors.toList());
 
         // Pedidos recientes
-        List<Usuario> todosLosDeportistas = gestionarClientesUseCase.listarDeportistas();
+        List<Usuario> todosLosDeportistas = gestionarClientesUseCase.listarTodosLosDeportistasCrossTenant();
         Map<Long, Usuario> deportistasPorId = todosLosDeportistas.stream()
                 .collect(Collectors.toMap(Usuario::getId, u -> u));
 
@@ -218,7 +218,7 @@ public class TenantCrmController {
             LocalDateTime finSemana = inicioSemana.plusWeeks(1);
             
             double ingresosSemana = pedidos.stream()
-                    .filter(p -> p.getEstado().equals("PAGADO") && 
+                    .filter(p -> (p.getEstado().equals("PAGADO") || p.getEstado().equals("ENTREGADO")) && 
                                p.getFechaCreacion().isAfter(inicioSemana) && 
                                p.getFechaCreacion().isBefore(finSemana))
                     .mapToDouble(PedidoEcommerce::getMontoTotal)

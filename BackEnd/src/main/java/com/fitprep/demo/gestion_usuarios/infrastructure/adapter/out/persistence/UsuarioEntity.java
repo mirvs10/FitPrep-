@@ -51,4 +51,8 @@ public class UsuarioEntity {
 
     @Column(name = "req_grasas_g")
     private Double reqGrasasG;
+
+    @Column(name = "estado", nullable = false, length = 20)
+    @Builder.Default
+    private String estado = "ACTIVO";
 }

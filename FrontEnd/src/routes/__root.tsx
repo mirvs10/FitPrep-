@@ -51,7 +51,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "NutriFlow — SaaS de Planificación Nutricional" },
+      { title: "FitPrep — SaaS de Planificación Nutricional" },
       { name: "description", content: "Plataforma SaaS multi-tenant que conecta negocios de alimentación saludable con atletas que planifican su semana nutricional." },
     ],
     links: [
@@ -107,7 +107,7 @@ function RootComponent() {
         }
       } else {
         // 2. Si está logueado e intenta entrar a login/register
-        if (pathname === "/login" || pathname === "/register") {
+        if (pathname === "/login" || pathname === "/register" || pathname === "/") {
           if (rol === "ADMIN") navigate({ to: "/admin" });
           else if (rol === "TENANT") navigate({ to: "/tenant" });
           else if (rol === "ATHLETE") navigate({ to: "/athlete" });

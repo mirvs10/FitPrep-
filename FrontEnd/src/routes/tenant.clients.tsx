@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { MockupShell, PageHeader, Card, Btn, Badge } from "@/components/mockup/Shell";
+import { AppShell, PageHeader, Card, Btn, Badge } from "@/components/layout/Shell";
 import { Search } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { tenantService } from "@/lib/api";
@@ -15,9 +15,9 @@ function Clients() {
     queryFn: tenantService.obtenerClientes,
   });
   return (
-    <MockupShell breadcrumbs={["FitKitchen", "Clientes"]}>
+    <AppShell breadcrumbs={["FitKitchen", "Clientes"]}>
       <div className="p-8">
-        <PageHeader backTo="/tenant" eyebrow="CRM" title="Clientes" description={`${clients?.length || 0} clientes activos`} actions={<Btn>Invitar cliente</Btn>} />
+        <PageHeader backTo="/tenant" eyebrow="CRM" title="Clientes" description={`${clients?.length || 0} clientes activos`} />
         <Card className="overflow-hidden">
           <div className="p-4 border-b border-border flex items-center gap-3">
             <div className="flex items-center gap-2 px-3 h-9 rounded-md bg-muted text-sm flex-1 max-w-md">
@@ -49,7 +49,7 @@ function Clients() {
                     <td className="px-5 py-3 text-right tabular-nums">{c.totalPedidos}</td>
                     <td className="px-5 py-3 text-right tabular-nums font-medium">${c.ltv.toFixed(2)}</td>
                     <td className="px-5 py-3"><Badge tone="brand">{c.estado}</Badge></td>
-                    <td className="px-5 py-3 text-right"><button className="text-xs text-brand-600 font-medium">Ver perfil &rarr;</button></td>
+                    <td className="px-5 py-3 text-right"></td>
                   </tr>
                 ))
               )}
@@ -57,6 +57,6 @@ function Clients() {
           </table>
         </Card>
       </div>
-    </MockupShell>
+    </AppShell>
   );
 }

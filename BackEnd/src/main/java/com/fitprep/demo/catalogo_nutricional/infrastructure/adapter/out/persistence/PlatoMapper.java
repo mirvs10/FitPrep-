@@ -25,6 +25,8 @@ final class PlatoMapper {
                 .carbohidratos(entity.getCarbohidratos())
                 .grasas(entity.getGrasas())
                 .disponible(entity.getDisponible())
+                .etiquetas(entity.getEtiquetas() != null && !entity.getEtiquetas().trim().isEmpty() ? java.util.Arrays.asList(entity.getEtiquetas().split(",")) : new java.util.ArrayList<>())
+                .imagenUrl(entity.getImagenUrl())
                 .build();
     }
 
@@ -43,6 +45,8 @@ final class PlatoMapper {
                 .carbohidratos(plato.getCarbohidratos())
                 .grasas(plato.getGrasas())
                 .disponible(plato.getDisponible())
+                .etiquetas(plato.getEtiquetas() != null && !plato.getEtiquetas().isEmpty() ? String.join(",", plato.getEtiquetas()) : null)
+                .imagenUrl(plato.getImagenUrl())
                 .build();
     }
 }

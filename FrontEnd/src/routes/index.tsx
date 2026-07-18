@@ -4,9 +4,9 @@ import { ArrowRight, Check, BarChart3, Calendar, Salad, Truck, Shield } from "lu
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "NutriFlow — Logística de nutrición semanal para negocios saludables" },
+      { title: "FitPrep — Logística de nutrición semanal para negocios saludables" },
       { name: "description", content: "Conectamos restaurantes, gimnasios y nutricionistas con atletas que planifican su semana. Macros en tiempo real, producción optimizada, cero fricción." },
-      { property: "og:title", content: "NutriFlow — SaaS de planificación nutricional" },
+      { property: "og:title", content: "FitPrep — SaaS de planificación nutricional" },
       { property: "og:description", content: "Plataforma multi-tenant para planificar comidas saludables semana a semana." },
     ],
   }),
@@ -22,7 +22,7 @@ function Landing() {
             <div className="size-8 rounded-lg bg-brand-500 grid place-items-center">
               <div className="size-3.5 rounded-full border-2 border-white" />
             </div>
-            <span className="font-semibold tracking-tight text-lg">NutriFlow</span>
+            <span className="font-semibold tracking-tight text-lg">FitPrep</span>
           </Link>
           <div className="hidden md:flex items-center gap-7 text-sm text-muted-foreground">
             <a href="#producto" className="hover:text-foreground">Producto</a>
@@ -49,7 +49,7 @@ function Landing() {
               Nutrición semanal, <span className="text-brand-600">producción impecable.</span>
             </h1>
             <p className="mt-6 text-lg text-muted-foreground max-w-[58ch]">
-              NutriFlow es la plataforma SaaS multi-tenant para restaurantes saludables, gimnasios y nutricionistas que quieren operar como un equipo profesional: catálogo, pedidos semanales, cocina y logística en un solo lugar.
+              FitPrep es la plataforma SaaS multi-tenant para restaurantes saludables, gimnasios y nutricionistas que quieren operar como un equipo profesional: catálogo, pedidos semanales, cocina y logística en un solo lugar.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link to="/tenants" className="inline-flex items-center gap-2 h-11 px-5 rounded-md bg-brand-500 text-white font-medium hover:bg-brand-600 shadow-sm shadow-brand-500/20">
@@ -168,7 +168,7 @@ function Landing() {
         <div className="mx-auto max-w-7xl px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-muted-foreground">
           <div className="flex items-center gap-2">
             <div className="size-5 rounded-md bg-brand-500" />
-            <span className="font-semibold text-foreground">NutriFlow</span> · © 2026
+            <span className="font-semibold text-foreground">FitPrep</span> · © 2026
           </div>
           <div className="flex gap-6"><a href="#">Privacidad</a><a href="#">Términos</a><a href="#">Contacto</a></div>
         </div>

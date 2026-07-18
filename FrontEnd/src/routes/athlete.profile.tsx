@@ -1,10 +1,11 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { authService } from "../lib/api";
-import { MockupShell, PageHeader, Card, Btn, Badge } from "@/components/mockup/Shell";
+import { AppShell, PageHeader, Card, Btn, Badge } from "@/components/layout/Shell";
+import { useState } from "react";
 
 export const Route = createFileRoute("/athlete/profile")({
-  head: () => ({ meta: [{ title: "Perfil — NutriFlow" }] }),
+  head: () => ({ meta: [{ title: "Perfil — FitPrep" }] }),
   component: Profile,
 });
 
@@ -30,31 +31,41 @@ function Profile() {
 
   if (isLoading) {
     return (
-      <MockupShell breadcrumbs={["Atleta", "Perfil"]}>
+      <AppShell breadcrumbs={["Atleta", "Perfil"]}>
         <div className="p-8 flex items-center justify-center min-h-[300px]">
           <span className="text-sm text-muted-foreground">Cargando perfil...</span>
         </div>
-      </MockupShell>
+      </AppShell>
     );
   }
 
   if (error) {
     return (
-      <MockupShell breadcrumbs={["Atleta", "Perfil"]}>
+      <AppShell breadcrumbs={["Atleta", "Perfil"]}>
         <div className="p-8">
           <div className="p-4 rounded-lg bg-rose-50 border border-rose-100 text-rose-600 text-sm">
             Error al cargar la información del perfil.
           </div>
         </div>
-      </MockupShell>
+      </AppShell>
     );
   }
 
   const initials = getInitials(usuario?.nombres, usuario?.apellidos);
   const fullName = `${usuario?.nombres || ""} ${usuario?.apellidos || ""}`.trim();
+  
+  const [direccion, setDireccion] = useState(() => localStorage.getItem("user_address") || "No configurado");
+  const [isEditingAddress, setIsEditingAddress] = useState(false);
+  const [tempDireccion, setTempDireccion] = useState(direccion);
+
+  const handleSaveAddress = () => {
+    localStorage.setItem("user_address", tempDireccion);
+    setDireccion(tempDireccion);
+    setIsEditingAddress(false);
+  };
 
   return (
-    <MockupShell breadcrumbs={["Atleta", "Perfil"]}>
+    <AppShell breadcrumbs={["Atleta", "Perfil"]}>
       <div className="p-8 max-w-5xl mx-auto">
         <PageHeader 
           eyebrow="Mi cuenta" 
@@ -111,11 +122,36 @@ function Profile() {
                   <dd className="font-medium">{v}</dd>
                 </div>
               ))}
+              <div className="sm:col-span-2 mt-2 pt-4 border-t border-border">
+                <dt className="text-xs text-muted-foreground mb-1 flex items-center justify-between">
+                  Dirección de Envío
+                  {!isEditingAddress && (
+                    <button onClick={() => setIsEditingAddress(true)} className="text-brand-600 hover:underline">Editar</button>
+                  )}
+                </dt>
+                <dd className="font-medium">
+                  {isEditingAddress ? (
+                    <div className="flex gap-2 items-center mt-2">
+                      <input 
+                        type="text" 
+                        value={tempDireccion} 
+                        onChange={(e) => setTempDireccion(e.target.value)}
+                        className="flex-1 h-9 rounded-md border border-border px-3 text-sm"
+                        placeholder="Ej: Av. Principal 123, Ciudad"
+                      />
+                      <Btn size="sm" onClick={handleSaveAddress}>Guardar</Btn>
+                      <Btn size="sm" variant="outline" onClick={() => { setIsEditingAddress(false); setTempDireccion(direccion); }}>Cancelar</Btn>
+                    </div>
+                  ) : (
+                    direccion
+                  )}
+                </dd>
+              </div>
             </dl>
           </Card>
         </div>
       </div>
-    </MockupShell>
+    </AppShell>
   );
 }
 

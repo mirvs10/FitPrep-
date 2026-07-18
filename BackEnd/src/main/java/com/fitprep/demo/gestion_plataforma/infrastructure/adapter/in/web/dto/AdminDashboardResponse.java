@@ -16,4 +16,5 @@ public class AdminDashboardResponse {
     private double mrr;
     private double churn;
     private List<NegocioResponse> negociosNuevos;
+    private java.util.Map<String, Long> distribucionPlanes;
 }

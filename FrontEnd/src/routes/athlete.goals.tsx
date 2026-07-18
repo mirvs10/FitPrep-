@@ -2,11 +2,11 @@ import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { authService } from "../lib/api";
-import { MockupShell, PageHeader, Card, Btn } from "@/components/mockup/Shell";
+import { AppShell, PageHeader, Card, Btn } from "@/components/layout/Shell";
 import { ArrowLeft } from "lucide-react";
 
 export const Route = createFileRoute("/athlete/goals")({
-  head: () => ({ meta: [{ title: "Objetivos nutricionales — NutriFlow" }] }),
+  head: () => ({ meta: [{ title: "Objetivos nutricionales — FitPrep" }] }),
   component: Goals,
 });
 
@@ -74,28 +74,28 @@ function Goals() {
 
   if (isLoading) {
     return (
-      <MockupShell breadcrumbs={["Atleta", "Objetivos"]}>
+      <AppShell breadcrumbs={["Atleta", "Objetivos"]}>
         <div className="p-8 flex items-center justify-center min-h-[300px]">
           <span className="text-sm text-muted-foreground">Cargando tus objetivos nutricionales...</span>
         </div>
-      </MockupShell>
+      </AppShell>
     );
   }
 
   if (error) {
     return (
-      <MockupShell breadcrumbs={["Atleta", "Objetivos"]}>
+      <AppShell breadcrumbs={["Atleta", "Objetivos"]}>
         <div className="p-8">
           <div className="p-4 rounded-lg bg-rose-50 border border-rose-100 text-rose-600 text-sm">
             Error al cargar la información del perfil del deportista.
           </div>
         </div>
-      </MockupShell>
+      </AppShell>
     );
   }
 
   return (
-    <MockupShell breadcrumbs={["Atleta", "Objetivos"]}>
+    <AppShell breadcrumbs={["Atleta", "Objetivos"]}>
       <div className="p-8 max-w-4xl">
         <div className="flex items-center gap-4 mb-2">
           <button onClick={() => navigate({ to: "/athlete" })} className="p-2 -ml-2 rounded-full hover:bg-muted text-muted-foreground transition-colors cursor-pointer">
@@ -213,7 +213,7 @@ function Goals() {
           </Section>
         </Card>
       </div>
-    </MockupShell>
+    </AppShell>
   );
 }
 

@@ -20,5 +20,12 @@ public interface UsuarioRepositoryPort {
     /** Buscar todos los usuarios por rol ignorando el Tenant (Global) */
     List<Usuario> findAllByRolIgnoringTenant(String rol);
 
+    /** Buscar todos los usuarios ignorando el Tenant (Global) */
+    List<Usuario> findAllIgnoringTenant();
+
     Usuario save(Usuario usuario);
+    
+    Usuario saveWithTenant(Usuario usuario, Integer tenantId);
+
+    void deleteById(Long id);
 }

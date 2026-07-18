@@ -24,6 +24,7 @@ final class UsuarioMapper {
                 .reqProteinasG(e.getReqProteinasG())
                 .reqCarbohidratosG(e.getReqCarbohidratosG())
                 .reqGrasasG(e.getReqGrasasG())
+                .estado(e.getEstado())
                 .build();
     }
 
@@ -44,6 +45,7 @@ final class UsuarioMapper {
                 .reqProteinasG(u.getReqProteinasG())
                 .reqCarbohidratosG(u.getReqCarbohidratosG())
                 .reqGrasasG(u.getReqGrasasG())
+                .estado(u.getEstado())
                 .build();
     }
 }

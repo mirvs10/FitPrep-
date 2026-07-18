@@ -37,6 +37,7 @@ public class AdminDashboardController {
                 .mrr(stats.getMrr())
                 .churn(stats.getChurn())
                 .negociosNuevos(nuevosResponse)
+                .distribucionPlanes(stats.getDistribucionPlanes())
                 .build();
 
         return ResponseEntity.ok(response);

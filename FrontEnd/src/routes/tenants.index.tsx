@@ -1,11 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { MockupShell, PageHeader, Card, Btn, Badge } from "@/components/mockup/Shell";
+import { AppShell, PageHeader, Card, Btn, Badge } from "@/components/layout/Shell";
 import { Search } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { platosService } from "../lib/api";
 
 export const Route = createFileRoute("/tenants/")({
-  head: () => ({ meta: [{ title: "Explorar Platos — NutriFlow" }] }),
+  head: () => ({ meta: [{ title: "Explorar Platos — FitPrep" }] }),
   component: Explorar,
 });
 
@@ -16,7 +16,7 @@ function Explorar() {
   });
 
   return (
-    <MockupShell breadcrumbs={["Inicio", "Explorar"]}>
+    <AppShell breadcrumbs={["Inicio", "Explorar"]}>
       <div className="p-8 max-w-6xl mx-auto">
         <PageHeader
           eyebrow="Catálogo general"
@@ -39,11 +39,16 @@ function Explorar() {
           <div className="py-20 text-center text-sm text-muted-foreground">Cargando catálogo...</div>
         ) : (
           <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {platos?.map((p) => (
-              <Link key={p.id} to={`/athlete/meal/$id`} params={{ id: p.id.toString() }} className="block group">
-                <Card className="overflow-hidden hover:border-brand-500/40 transition-colors h-full flex flex-col">
-                  <div className="aspect-[4/3] bg-gradient-to-br from-brand-100 to-brand-50 relative">
-                    <div className="absolute top-3 left-3">
+              {platos?.map((p) => (
+                <Link key={p.id} to={`/athlete/meal/$id`} params={{ id: p.id.toString() }} className="block group">
+                  <Card className="overflow-hidden hover:border-brand-500/40 transition-colors h-full flex flex-col">
+                    <div className="aspect-[4/3] relative bg-muted shrink-0 w-full">
+                      {p.imagenUrl ? (
+                        <img src={p.imagenUrl} alt={p.nombre} className="absolute inset-0 w-full h-full object-cover" />
+                      ) : (
+                        <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-brand-100 to-brand-50" />
+                      )}
+                      <div className="absolute top-3 left-3">
                       <Badge tone={p.proteinas >= 30 ? "brand" : p.carbohidratos <= 20 ? "blue" : "amber"}>
                         {p.proteinas >= 30 ? "Alto en proteína" : p.carbohidratos <= 20 ? "Bajo en carbos" : "Balanceado"}
                       </Badge>
@@ -63,6 +68,6 @@ function Explorar() {
           </div>
         )}
       </div>
-    </MockupShell>
+    </AppShell>
   );
 }

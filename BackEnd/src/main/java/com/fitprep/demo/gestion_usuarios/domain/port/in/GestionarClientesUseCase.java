@@ -12,4 +12,7 @@ public interface GestionarClientesUseCase {
 
     /** Deportistas (rol ATHLETE) del negocio activo. */
     List<Usuario> listarDeportistas();
+
+    /** Buscar todos los deportistas a nivel global (ignora el Tenant) */
+    List<Usuario> listarTodosLosDeportistasCrossTenant();
 }

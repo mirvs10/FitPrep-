@@ -84,6 +84,8 @@ public class PlatoController {
                 .carbohidratos(request.getCarbohidratos())
                 .grasas(request.getGrasas())
                 .disponible(request.getDisponible() != null ? request.getDisponible() : true)
+                .etiquetas(request.getEtiquetas())
+                .imagenUrl(request.getImagenUrl())
                 .build();
     }
 
@@ -99,6 +101,8 @@ public class PlatoController {
                 .carbohidratos(plato.getCarbohidratos())
                 .grasas(plato.getGrasas())
                 .disponible(plato.getDisponible())
+                .etiquetas(plato.getEtiquetas())
+                .imagenUrl(plato.getImagenUrl())
                 .build();
     }
 }

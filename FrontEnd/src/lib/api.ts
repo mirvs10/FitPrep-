@@ -92,6 +92,7 @@ export interface AdminDashboardResponse {
   mrr: number;
   churn: number;
   negociosNuevos: NegocioResponse[];
+  distribucionPlanes: Record<string, number>;
 }
 
 export interface LineaPedidoResponse {
@@ -134,6 +135,8 @@ export interface PlatoResponse {
   carbohidratos: number;
   grasas: number;
   disponible: boolean;
+  etiquetas?: string[];
+  imagenUrl?: string;
 }
 
 export interface PlatoRequest {
@@ -145,6 +148,8 @@ export interface PlatoRequest {
   carbohidratos: number;
   grasas: number;
   disponible: boolean;
+  etiquetas?: string[];
+  imagenUrl?: string;
 }
 
 export interface ComidaProgramadaRequest {
@@ -184,6 +189,14 @@ export interface PlanSemanalResponse {
 export const authService = {
   login: async (email: string, contrasenia: string): Promise<AuthResponse> => {
     const response = await api.post("/api/v1/auth/login", { email, password: contrasenia });
+    return response.data;
+  },
+  registrarDeportista: async (data: any): Promise<AuthResponse> => {
+    const response = await api.post("/api/v1/auth/register/deportista", data);
+    return response.data;
+  },
+  registrarNegocio: async (data: any) => {
+    const response = await api.post("/api/v1/auth/register/negocio", data);
     return response.data;
   },
   getMe: async (): Promise<UsuarioProfile> => {
@@ -258,6 +271,29 @@ export const adminService = {
     const response = await api.patch(`/api/v1/admin/negocios/${id}/suspender`);
     return response.data;
   },
+  cambiarPlanNegocio: async (id: number, plan: string): Promise<NegocioResponse> => {
+    const response = await api.patch(`/api/v1/admin/negocios/${id}/plan?plan=${encodeURIComponent(plan)}`);
+    return response.data;
+  },
+  getUsuarios: async (): Promise<AuthResponse[]> => {
+    const response = await api.get("/api/v1/admin/usuarios");
+    return response.data;
+  },
+  eliminarUsuario: async (id: number): Promise<void> => {
+    await api.delete(`/api/v1/admin/usuarios/${id}`);
+  },
+  getHistorico: async (): Promise<any[]> => {
+    const response = await api.get("/api/v1/admin/reportes/historico");
+    return response.data;
+  },
+  getSuscripciones: async (): Promise<any[]> => {
+    const response = await api.get("/api/v1/admin/suscripciones");
+    return response.data;
+  },
+  simularFalloPago: async (negocioId: number): Promise<string> => {
+    const response = await api.post(`/api/v1/webhooks/pagos/simular-fallo/${negocioId}`);
+    return response.data;
+  }
 };
 
 // Servicios de Logística / Cocina

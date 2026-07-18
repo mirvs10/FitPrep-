@@ -1,49 +1,138 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { MockupShell, PageHeader, Card, Btn, Badge } from "@/components/mockup/Shell";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { adminService } from "../lib/api";
+import { AppShell, PageHeader, Card, Btn, Badge } from "@/components/layout/Shell";
 import { Search } from "lucide-react";
+import { useState } from "react";
 
 export const Route = createFileRoute("/admin/users")({
-  head: () => ({ meta: [{ title: "Usuarios — Admin NutriFlow" }] }),
+  head: () => ({ meta: [{ title: "Usuarios — Admin FitPrep" }] }),
   component: Users,
 });
 
-const users = [
-  ["MR","Marcos Rivas","marcos@email.com","Atleta","FitKitchen","Pro","Activo","brand"],
-  ["LR","Laura Restrepo","laura@fitkitchen.es","Owner","FitKitchen","-","Activo","brand"],
-  ["SO","Sonia Ocampo","sonia@email.com","Atleta","FitKitchen","Free","Activo","brand"],
-  ["DF","David Fernández","david@gymforce.com","Owner","GymForce","-","Activo","brand"],
-  ["EG","Elena Gómez","elena@email.com","Atleta","Macrobox","Pro","Inactivo","neutral"],
-];
-
 function Users() {
+  const queryClient = useQueryClient();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [roleFilter, setRoleFilter] = useState("Todos");
+
+  const { data: users, isLoading, error } = useQuery({
+    queryKey: ["adminUsers"],
+    queryFn: adminService.getUsuarios,
+  });
+
+  const eliminarMutation = useMutation({
+    mutationFn: (id: number) => adminService.eliminarUsuario(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["adminUsers"] });
+      queryClient.invalidateQueries({ queryKey: ["adminStats"] });
+    },
+  });
+
+  const filteredUsers = users?.filter((u) => {
+    const matchesSearch = (u.nombres?.toLowerCase() || "").includes(searchTerm.toLowerCase()) || 
+                          (u.apellidos?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+                          (u.email?.toLowerCase() || "").includes(searchTerm.toLowerCase());
+    if (!matchesSearch) return false;
+    if (roleFilter === "Atletas") return u.rol === "ATHLETE";
+    if (roleFilter === "Owners") return u.rol === "TENANT";
+    if (roleFilter === "Admins") return u.rol === "ADMIN";
+    return true;
+  });
+
+  if (isLoading) {
+    return (
+      <AppShell breadcrumbs={["Admin SaaS", "Usuarios"]}>
+        <div className="p-8 flex items-center justify-center min-h-[300px]">
+          <span className="text-sm text-muted-foreground">Cargando usuarios...</span>
+        </div>
+      </AppShell>
+    );
+  }
+
   return (
-    <MockupShell breadcrumbs={["Admin SaaS", "Usuarios"]}>
+    <AppShell breadcrumbs={["Admin SaaS", "Usuarios"]}>
       <div className="p-8">
-        <PageHeader eyebrow="24,820 cuentas" title="Gestión de usuarios" actions={<Btn>+ Invitar admin</Btn>} />
+        <PageHeader 
+          eyebrow={`${users?.length || 0} cuentas`} 
+          title="Gestión de usuarios" 
+          actions={<Link to="/admin" className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2">Volver al Dashboard</Link>} 
+        />
         <Card className="overflow-hidden">
           <div className="p-4 border-b border-border flex items-center gap-3">
-            <div className="flex items-center gap-2 px-3 h-9 rounded-md bg-muted text-sm flex-1 max-w-md"><Search className="size-4 text-muted-foreground" /><input className="bg-transparent flex-1 outline-none" placeholder="Buscar usuario..." /></div>
-            {["Todos","Atletas","Owners","Admins"].map((t,i) => (<button key={t} className={`px-3 h-8 rounded-md text-xs font-medium ${i===0?"bg-foreground text-background":"border border-border"}`}>{t}</button>))}
+            <div className="flex items-center gap-2 px-3 h-9 rounded-md bg-muted text-sm flex-1 max-w-md">
+              <Search className="size-4 text-muted-foreground" />
+              <input className="bg-transparent flex-1 outline-none" placeholder="Buscar usuario..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+            </div>
+            {["Todos","Atletas","Owners","Admins"].map((t) => (
+              <button 
+                key={t} 
+                onClick={() => setRoleFilter(t)}
+                className={`px-3 h-8 rounded-md text-xs font-medium ${roleFilter === t ? "bg-foreground text-background" : "border border-border"}`}
+              >
+                {t}
+              </button>
+            ))}
           </div>
           <table className="w-full text-sm">
             <thead className="bg-surface text-[10px] uppercase tracking-widest text-muted-foreground">
-              <tr><th className="text-left px-5 py-3">Usuario</th><th className="text-left px-5 py-3">Rol</th><th className="text-left px-5 py-3">Negocio</th><th className="text-left px-5 py-3">Plan</th><th className="text-left px-5 py-3">Estado</th><th /></tr>
+              <tr>
+                <th className="text-left px-5 py-3">Usuario</th>
+                <th className="text-left px-5 py-3">Rol</th>
+                <th className="text-left px-5 py-3">Negocio ID</th>
+                <th className="text-left px-5 py-3">ID</th>
+                <th className="text-right px-5 py-3">Acciones</th>
+              </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {users.map(([i,n,e,r,b,p,s,t]) => (
-                <tr key={n as string} className="hover:bg-muted/40">
-                  <td className="px-5 py-3"><div className="flex items-center gap-3"><div className="size-8 rounded-full bg-brand-100 grid place-items-center text-[10px] font-semibold text-brand-700">{i}</div><div><div className="font-medium">{n}</div><div className="text-xs text-muted-foreground">{e}</div></div></div></td>
-                  <td className="px-5 py-3">{r}</td>
-                  <td className="px-5 py-3 text-muted-foreground">{b}</td>
-                  <td className="px-5 py-3">{p}</td>
-                  <td className="px-5 py-3"><Badge tone={t as "brand"|"neutral"}>{s}</Badge></td>
-                  <td className="px-5 py-3 text-right"><button className="text-xs text-brand-600 font-medium">Ver →</button></td>
+              {filteredUsers && filteredUsers.length > 0 ? (
+                filteredUsers.map((u) => (
+                  <tr key={u.id} className="hover:bg-muted/40">
+                    <td className="px-5 py-3">
+                      <div className="flex items-center gap-3">
+                        <div className="size-8 rounded-full bg-brand-100 grid place-items-center text-[10px] font-semibold text-brand-700">
+                          {u.nombres?.substring(0,2).toUpperCase() || "??"}
+                        </div>
+                        <div>
+                          <div className="font-medium">{u.nombres} {u.apellidos}</div>
+                          <div className="text-xs text-muted-foreground">{u.email}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-5 py-3 font-medium">
+                      {u.rol === "TENANT" ? "Owner" : u.rol === "ATHLETE" ? "Atleta" : u.rol}
+                    </td>
+                    <td className="px-5 py-3 text-muted-foreground">
+                      {u.negocioId || "-"}
+                    </td>
+                    <td className="px-5 py-3 text-muted-foreground font-mono text-xs">
+                      {u.id}
+                    </td>
+                    <td className="px-5 py-3 text-right">
+                      <button 
+                        onClick={() => {
+                          if(confirm(`¿Estás seguro de eliminar a ${u.nombres}? Esta acción es irreversible.`)) {
+                            eliminarMutation.mutate(u.id);
+                          }
+                        }}
+                        disabled={eliminarMutation.isPending}
+                        className="text-xs text-rose-600 font-medium hover:underline disabled:opacity-50"
+                      >
+                        Eliminar
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={5} className="px-5 py-8 text-center text-xs text-muted-foreground">
+                    No se encontraron usuarios.
+                  </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </Card>
       </div>
-    </MockupShell>
+    </AppShell>
   );
 }

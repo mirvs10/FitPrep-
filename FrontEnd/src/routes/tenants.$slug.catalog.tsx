@@ -1,12 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { platosService } from "../lib/api";
-import { MockupShell, PageHeader, Card, Btn, Badge } from "@/components/mockup/Shell";
+import { AppShell, PageHeader, Card, Btn, Badge } from "@/components/layout/Shell";
 import { Search, Filter, Plus } from "lucide-react";
 import { useState } from "react";
 
 export const Route = createFileRoute("/tenants/$slug/catalog")({
-  head: ({ params }) => ({ meta: [{ title: `Catálogo · ${params.slug} — NutriFlow` }, { name: "description", content: "Catálogo de comidas saludables." }] }),
+  head: ({ params }) => ({ meta: [{ title: `Catálogo · ${params.slug} — FitPrep` }, { name: "description", content: "Catálogo de comidas saludables." }] }),
   component: Catalog,
 });
 
@@ -38,10 +38,15 @@ function Catalog() {
     if (!matchesSearch) return false;
 
     if (selectedTag !== "Todos") {
-      // Filtros rápidos aproximados basados en los macros del plato
-      if (selectedTag === "Alto en proteína" && p.proteinas < 35) return false;
-      if (selectedTag === "Bajo en carbos" && p.carbohidratos > 30) return false;
-      if (selectedTag === "Under 500 kcal" && p.calorias >= 500) return false;
+      // Filtrar por etiquetas de BD si están presentes
+      if (p.etiquetas && p.etiquetas.length > 0) {
+        if (!p.etiquetas.includes(selectedTag)) return false;
+      } else {
+        // Fallback a heurísticas de macros si no tiene etiquetas
+        if (selectedTag === "Alto proteína" && p.proteinas < 35) return false;
+        if (selectedTag === "Low-carb" && p.carbohidratos > 30) return false;
+        if (selectedTag === "Under 500 kcal" && p.calorias >= 500) return false;
+      }
     }
 
     return true;
@@ -49,16 +54,16 @@ function Catalog() {
 
   if (isLoading) {
     return (
-      <MockupShell breadcrumbs={["Inicio", "Negocios", slug, "Catálogo"]}>
+      <AppShell breadcrumbs={["Inicio", "Negocios", slug, "Catálogo"]}>
         <div className="p-8 flex items-center justify-center min-h-[300px]">
           <span className="text-sm text-muted-foreground">Cargando menú de platos...</span>
         </div>
-      </MockupShell>
+      </AppShell>
     );
   }
 
   return (
-    <MockupShell breadcrumbs={["Inicio", "Negocios", slug, "Catálogo"]}>
+    <AppShell breadcrumbs={["Inicio", "Negocios", slug, "Catálogo"]}>
       <div className="p-8">
         <PageHeader 
           eyebrow="Catálogo" 
@@ -80,7 +85,7 @@ function Catalog() {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          {["Todos", "Alto en proteína", "Bajo en carbos", "Under 500 kcal"].map((t) => (
+          {["Todos", "Alto proteína", "Vegano", "Sin gluten", "Keto", "Low-carb"].map((t) => (
             <button 
               key={t} 
               onClick={() => setSelectedTag(t)}
@@ -95,16 +100,26 @@ function Catalog() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {platosFiltrados.map((p) => (
               <Link key={p.id} to="/athlete/meal/$id" params={{ id: p.id.toString() }} className="block group">
-                <Card className="overflow-hidden hover:border-brand-500/40 transition-colors">
-                  <div className="aspect-square bg-gradient-to-br from-brand-50 to-muted relative">
-                    <div className="absolute top-3 left-3"><Badge tone="brand">Plato</Badge></div>
+                <Card className="overflow-hidden hover:border-brand-500/40 transition-colors h-full flex flex-col">
+                  <div className="aspect-square bg-muted relative overflow-hidden">
+                    {p.imagenUrl ? (
+                      <img src={p.imagenUrl} alt={p.nombre} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-brand-50 to-muted" />
+                    )}
+                    <div className="absolute top-3 left-3 flex flex-col gap-1.5 items-start">
+                      {p.etiquetas?.slice(0,2).map(tag => (
+                         <Badge key={tag} tone="brand">{tag}</Badge>
+                      ))}
+                      {(!p.etiquetas || p.etiquetas.length === 0) && <Badge tone="brand">Plato</Badge>}
+                    </div>
                     <div className="absolute bottom-3 right-3 text-[10px] font-mono text-muted-foreground bg-card/90 backdrop-blur px-2 py-1 rounded">
                       S/ {p.precio.toFixed(2)}
                     </div>
                   </div>
-                  <div className="p-4">
+                  <div className="p-4 flex-1 flex flex-col">
                     <h3 className="text-sm font-semibold leading-tight group-hover:text-brand-600 truncate">{p.nombre}</h3>
-                    <p className="text-xs text-muted-foreground mt-1 line-clamp-2 min-h-[32px]">{p.descripcion || "Plato balanceado optimizado con macros de alta calidad."}</p>
+                    <p className="text-xs text-muted-foreground mt-1 line-clamp-2 min-h-[32px] flex-1">{p.descripcion || "Plato balanceado optimizado con macros de alta calidad."}</p>
                     <div className="mt-3 flex items-center justify-between text-[11px] text-muted-foreground tabular-nums">
                       <span className="font-medium text-foreground">{p.calorias} kcal</span>
                       <span>P {p.proteinas}g · C {p.carbohidratos}g · G {p.grasas}g</span>
@@ -120,6 +135,6 @@ function Catalog() {
           </div>
         )}
       </div>
-    </MockupShell>
+    </AppShell>
   );
 }

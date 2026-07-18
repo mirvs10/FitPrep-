@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { authService } from "../lib/api";
 
 export const Route = createFileRoute("/login")({
-  head: () => ({ meta: [{ title: "Ingresar — NutriFlow" }, { name: "description", content: "Accede a tu cuenta de NutriFlow." }] }),
+  head: () => ({ meta: [{ title: "Ingresar — FitPrep" }, { name: "description", content: "Accede a tu cuenta de FitPrep." }] }),
   component: Login,
 });
 
@@ -84,17 +84,7 @@ function Login() {
         >
           {mutation.isPending ? "Iniciando sesión..." : "Ingresar"}
         </button>
-        <div className="flex items-center gap-3 text-[10px] uppercase text-muted-foreground">
-          <div className="h-px flex-1 bg-border" />o<div className="h-px flex-1 bg-border" />
-        </div>
-        <button 
-          type="button" 
-          disabled={mutation.isPending}
-          className="w-full h-10 rounded-md border border-border bg-card text-sm font-medium hover:bg-muted disabled:opacity-50"
-        >
-          Continuar con Google
-        </button>
-        <p className="text-center text-xs text-muted-foreground">
+        <p className="text-center text-xs text-muted-foreground mt-4">
           ¿No tienes cuenta? <Link to="/register" className="text-brand-600 font-medium">Crear una</Link>
         </p>
       </form>
@@ -109,10 +99,10 @@ export function AuthLayout({ title, subtitle, children }: { title: string; subti
       <div className="hidden lg:flex flex-col justify-between p-12 bg-surface border-r border-border">
         <Link to="/" className="flex items-center gap-2">
           <div className="size-9 rounded-lg bg-brand-500 grid place-items-center"><div className="size-4 rounded-full border-2 border-white" /></div>
-          <span className="font-semibold tracking-tight text-lg">NutriFlow</span>
+          <span className="font-semibold tracking-tight text-lg">FitPrep</span>
         </Link>
         <div>
-          <h2 className="text-3xl font-semibold tracking-tight leading-tight max-w-md text-balance">"Pasamos de Excel a NutriFlow y redujimos el desperdicio en un 38%."</h2>
+          <h2 className="text-3xl font-semibold tracking-tight leading-tight max-w-md text-balance">"Pasamos de Excel a FitPrep y redujimos el desperdicio en un 38%."</h2>
           <div className="mt-6 flex items-center gap-3">
             <div className="size-10 rounded-full bg-brand-100 grid place-items-center text-brand-700 font-semibold">LR</div>
             <div>
@@ -121,7 +111,7 @@ export function AuthLayout({ title, subtitle, children }: { title: string; subti
             </div>
           </div>
         </div>
-        <div className="text-xs text-muted-foreground">© 2026 NutriFlow Cloud Systems</div>
+        <div className="text-xs text-muted-foreground">© 2026 FitPrep Cloud Systems</div>
       </div>
       <div className="flex items-center justify-center p-8 relative">
         <Link to="/" className="absolute top-8 left-8 flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors font-medium">

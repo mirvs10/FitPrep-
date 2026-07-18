@@ -1,12 +1,12 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { adminService } from "../lib/api";
-import { MockupShell, PageHeader, Card, Btn, Badge } from "@/components/mockup/Shell";
+import { AppShell, PageHeader, Card, Btn, Badge } from "@/components/layout/Shell";
 import { Search } from "lucide-react";
 import { useState } from "react";
 
 export const Route = createFileRoute("/admin/businesses")({
-  head: () => ({ meta: [{ title: "Negocios — Admin NutriFlow" }] }),
+  head: () => ({ meta: [{ title: "Negocios - Admin FitPrep" }] }),
   component: Businesses,
 });
 
@@ -35,25 +35,33 @@ function Businesses() {
     },
   });
 
+  const planMutation = useMutation({
+    mutationFn: ({ id, plan }: { id: number, plan: string }) => adminService.cambiarPlanNegocio(id, plan),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["adminNegocios"] });
+      queryClient.invalidateQueries({ queryKey: ["adminStats"] });
+    },
+  });
+
   if (isLoading) {
     return (
-      <MockupShell breadcrumbs={["Admin SaaS", "Negocios"]}>
+      <AppShell breadcrumbs={["Admin SaaS", "Negocios"]}>
         <div className="p-8 flex items-center justify-center min-h-[300px]">
           <span className="text-sm text-muted-foreground">Cargando negocios registrados...</span>
         </div>
-      </MockupShell>
+      </AppShell>
     );
   }
 
   if (error) {
     return (
-      <MockupShell breadcrumbs={["Admin SaaS", "Negocios"]}>
+      <AppShell breadcrumbs={["Admin SaaS", "Negocios"]}>
         <div className="p-8">
           <div className="p-4 rounded-lg bg-rose-50 border border-rose-100 text-rose-600 text-sm">
             Error al cargar la lista de negocios registrados de la plataforma.
           </div>
         </div>
-      </MockupShell>
+      </AppShell>
     );
   }
 
@@ -65,9 +73,14 @@ function Businesses() {
   );
 
   return (
-    <MockupShell breadcrumbs={["Admin SaaS", "Negocios"]}>
+    <AppShell breadcrumbs={["Admin SaaS", "Negocios"]}>
       <div className="p-8">
-        <PageHeader eyebrow="Multi-tenant" title="Negocios registrados" description={`${negocios?.length || 0} negocios en la plataforma`} actions={<Btn>+ Onboarding manual</Btn>} />
+        <PageHeader 
+          eyebrow="Multi-tenant" 
+          title="Negocios registrados" 
+          description={`${negocios?.length || 0} negocios en la plataforma`} 
+          actions={<Link to="/admin" className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2">Volver al Dashboard</Link>} 
+        />
         
         <Card className="overflow-hidden">
           <div className="p-4 border-b border-border flex items-center gap-3">
@@ -110,7 +123,17 @@ function Businesses() {
                     </td>
                     <td className="px-5 py-3 text-muted-foreground font-mono text-xs">{biz.ruc}</td>
                     <td className="px-5 py-3 text-muted-foreground">{biz.telefono || "N/A"}</td>
-                    <td className="px-5 py-3 font-medium">Plan {biz.plan}</td>
+                    <td className="px-5 py-3 font-medium">
+                      <select 
+                        className="bg-transparent text-sm font-medium outline-none cursor-pointer hover:bg-muted p-1 rounded"
+                        value={biz.plan || "Growth"}
+                        onChange={(e) => planMutation.mutate({ id: biz.id, plan: e.target.value })}
+                        disabled={planMutation.isPending}
+                      >
+                        <option value="Growth">Plan Growth</option>
+                        <option value="Scale">Plan Scale</option>
+                      </select>
+                    </td>
                     <td className="px-5 py-3">
                       <Badge tone={biz.estado === "ACTIVO" ? "brand" : biz.estado === "SUSPENDIDO" ? "rose" : "amber"}>
                         {biz.estado}
@@ -148,7 +171,7 @@ function Businesses() {
           </table>
         </Card>
       </div>
-    </MockupShell>
+    </AppShell>
   );
 }
 

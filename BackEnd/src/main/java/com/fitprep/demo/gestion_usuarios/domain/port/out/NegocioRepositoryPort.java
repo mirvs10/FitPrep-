@@ -13,6 +13,8 @@ public interface NegocioRepositoryPort {
 
     Optional<Negocio> findBySlug(String slug);
 
+    Optional<Negocio> findByRuc(String ruc);
+
     java.util.List<Negocio> findAll();
 
     Negocio save(Negocio negocio);
