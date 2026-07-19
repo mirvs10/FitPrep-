@@ -82,7 +82,12 @@ public class PedidoEcommerceService implements ProcesarCheckoutUseCase, Consulta
         PedidoEcommerce pedido = pedidoRepositoryPort.findById(pedidoId)
                 .orElseThrow(() -> new IllegalArgumentException("Pedido no encontrado con ID: " + pedidoId));
         
-        pedido.setEstado(nuevoEstado.toUpperCase());
+        String estadoUpper = nuevoEstado.toUpperCase();
+        if (!List.of("PENDIENTE", "PAGADO", "PREPARANDO", "ENTREGADO", "CANCELADO").contains(estadoUpper)) {
+            throw new IllegalArgumentException("Estado no válido: " + estadoUpper);
+        }
+        
+        pedido.setEstado(estadoUpper);
         return pedidoRepositoryPort.save(pedido);
     }
 }

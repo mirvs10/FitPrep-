@@ -27,6 +27,12 @@ function Plan() {
   const [viewMode, setViewMode] = useState<"semana" | "dia">("semana");
   const [selectedDayTab, setSelectedDayTab] = useState("Lun");
 
+  // Mapeos canónicos para alinear con backend y tenant.orders
+  const MAP_DIAS_CANONICAL: Record<string, string> = { "Lun": "LUNES", "Mar": "MARTES", "Mié": "MIERCOLES", "Jue": "JUEVES", "Vie": "VIERNES", "Sáb": "SABADO", "Dom": "DOMINGO" };
+  const MAP_DIAS_UI: Record<string, string> = { "LUNES": "Lun", "MARTES": "Mar", "MIERCOLES": "Mié", "JUEVES": "Jue", "VIERNES": "Vie", "SABADO": "Sáb", "DOMINGO": "Dom" };
+  const MAP_TIPO_CANONICAL: Record<string, string> = { "Desayuno": "DESAYUNO", "Almuerzo": "ALMUERZO", "Cena": "CENA" };
+  const MAP_TIPO_UI: Record<string, string> = { "DESAYUNO": "Desayuno", "ALMUERZO": "Almuerzo", "CENA": "Cena" };
+
   // Calcular lunes de esta semana como baseline
   const getLunesSemana = (date: Date) => {
     const d = new Date(date);
@@ -86,12 +92,12 @@ function Plan() {
     queryFn: authService.getMe,
   });
 
-  const { data: misPlanes, isLoading: isPlanesLoading } = useQuery({
+  const { data: misPlanes, isLoading: isPlanesLoading, isError: isPlanesError } = useQuery({
     queryKey: ["misPlanes"],
     queryFn: planesService.getMisPlanes,
   });
 
-  const { data: platos, isLoading: isPlatosLoading } = useQuery({
+  const { data: platos, isLoading: isPlatosLoading, isError: isPlatosError } = useQuery({
     queryKey: ["catalogoPlatosGeneral"],
     queryFn: platosService.listarPlatosGenerales,
   });
@@ -266,8 +272,8 @@ function Plan() {
       ...comidasProgramadas,
       {
         platoId: selectedPlatoIdInModal,
-        diaSemana: selectedDay,
-        tipoComida: selectedTipo,
+        diaSemana: MAP_DIAS_CANONICAL[selectedDay] || selectedDay,
+        tipoComida: MAP_TIPO_CANONICAL[selectedTipo] || selectedTipo,
         cantidad: Number(cantidad),
         isNew: true,
       },
@@ -292,6 +298,16 @@ function Plan() {
       <AppShell breadcrumbs={["Atleta", "Plan semanal"]}>
         <div className="p-8 flex items-center justify-center min-h-[300px]">
           <span className="text-sm text-muted-foreground">Cargando tu plan y catálogo...</span>
+        </div>
+      </AppShell>
+    );
+  }
+
+  if (isPlanesError || isPlatosError) {
+    return (
+      <AppShell breadcrumbs={["Atleta", "Plan semanal"]}>
+        <div className="p-8 flex items-center justify-center min-h-[300px]">
+          <span className="text-sm text-destructive font-semibold">Ocurrió un error al cargar los datos. Por favor, intenta nuevamente más tarde.</span>
         </div>
       </AppShell>
     );
@@ -421,7 +437,8 @@ function Plan() {
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
                 {dias.map((day) => {
                   // Filtrar comidas del día
-                  const comidasDia = comidasProgramadas.map((c, i) => ({ ...c, originalIndex: i })).filter(c => c.diaSemana === day);
+                  const canonicalDay = MAP_DIAS_CANONICAL[day] || day;
+                  const comidasDia = comidasProgramadas.map((c, i) => ({ ...c, originalIndex: i })).filter(c => c.diaSemana === canonicalDay);
                   
                   return (
                     <div key={day} className="space-y-2 min-h-[300px] bg-surface/30 p-2 rounded-xl border border-border/60">
@@ -452,8 +469,8 @@ function Plan() {
                               </button>
                              )}
                              <div className="flex gap-1.5 items-center">
-                               <Badge tone={c.tipoComida === "Desayuno" ? "amber" : c.tipoComida === "Almuerzo" ? "brand" : "blue"}>
-                                 {c.tipoComida}
+                               <Badge tone={MAP_TIPO_UI[c.tipoComida] === "Desayuno" || c.tipoComida === "Desayuno" ? "amber" : MAP_TIPO_UI[c.tipoComida] === "Almuerzo" || c.tipoComida === "Almuerzo" ? "brand" : "blue"}>
+                                 {MAP_TIPO_UI[c.tipoComida] || c.tipoComida}
                                </Badge>
                                {c.isNew && <Badge tone="warning" className="text-[9px] px-1.5 py-0.5">NUEVO</Badge>}
                              </div>
@@ -504,9 +521,11 @@ function Plan() {
                 {/* Comidas del día agrupadas */}
                 <div className="space-y-4">
                   {["Desayuno", "Almuerzo", "Cena"].map((tipo) => {
+                    const canonicalDay = MAP_DIAS_CANONICAL[selectedDayTab] || selectedDayTab;
+                    const canonicalTipo = MAP_TIPO_CANONICAL[tipo] || tipo;
                     const comidasMomento = comidasProgramadas
                       .map((c, i) => ({ ...c, originalIndex: i }))
-                      .filter((c) => c.diaSemana === selectedDayTab && c.tipoComida === tipo);
+                      .filter((c) => c.diaSemana === canonicalDay && c.tipoComida === canonicalTipo);
 
                     return (
                       <Card key={tipo} className="p-5">

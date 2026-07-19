@@ -44,6 +44,7 @@ public class PlanSemanalController {
 
     @PostMapping
     public ResponseEntity<?> guardarPlan(@RequestBody PlanSemanalRequest request) {
+        PlanSemanal guardado = null;
         try {
             List<ComidaCommand> comidas = request.getComidas() == null
                     ? List.of()
@@ -62,8 +63,6 @@ public class PlanSemanalController {
                     request.getMontoTotal(),
                     comidas
             );
-
-            PlanSemanal guardado;
             
             try {
                 guardado = gestionarPlan.guardarPlan(command);
@@ -93,6 +92,18 @@ public class PlanSemanalController {
             body.put("message", e.getMessage());
             body.put("status", HttpStatus.BAD_REQUEST.value());
             return ResponseEntity.badRequest().body(body);
+        } catch (Exception e) {
+            try {
+                if (guardado != null && guardado.getId() != null) {
+                    gestionarPlan.cambiarEstadoPago(guardado.getId(), "CANCELADO");
+                }
+            } catch (Exception ignored) {}
+            
+            Map<String, Object> body = new HashMap<>();
+            body.put("error", "Error interno al procesar el pago");
+            body.put("message", "Hubo un fallo al procesar la logística. El plan fue cancelado.");
+            body.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
         }
     }
 

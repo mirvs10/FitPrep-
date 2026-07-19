@@ -54,6 +54,14 @@ public class AuthService implements AutenticacionUseCase {
             throw new IllegalArgumentException("Contraseña incorrecta");
         }
 
+        if ("TENANT".equalsIgnoreCase(usuario.getRol())) {
+            negocioRepository.findById((long) usuario.getNegocioId()).ifPresent(negocio -> {
+                if ("SUSPENDIDO".equalsIgnoreCase(negocio.getEstado())) {
+                    throw new IllegalArgumentException("Tu negocio ha sido suspendido, contacta al administrador");
+                }
+            });
+        }
+
         String token = tokenGenerator.generateToken(
                 usuario.getEmail(),
                 List.of(usuario.getRol()),

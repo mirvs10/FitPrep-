@@ -31,7 +31,7 @@ function Checkout() {
     queryFn: authService.getMe,
   });
 
-  const { data: platos, isLoading: isPlatosLoading } = useQuery({
+  const { data: platos, isLoading: isPlatosLoading, isError: isPlatosError } = useQuery({
     queryKey: ["catalogoPlatosGeneral"],
     queryFn: platosService.listarPlatosGenerales,
   });
@@ -158,9 +158,10 @@ function Checkout() {
         router.navigate({ to: "/athlete/plan" });
       }, 3000);
     },
-    onError: (error) => {
+    onError: (error: any) => {
       console.error("Error al procesar el pago de los planes:", error);
-      alert("Hubo un error al procesar el pago. Por favor intenta de nuevo.");
+      const msg = error.response?.data?.message || "Hubo un error al procesar el pago. Por favor intenta de nuevo.";
+      alert(msg);
     }
   });
 
@@ -199,6 +200,16 @@ function Checkout() {
       <AppShell breadcrumbs={["Atleta", "Checkout"]}>
         <div className="p-8 flex items-center justify-center min-h-[300px]">
           <span className="text-sm text-muted-foreground">Cargando detalles...</span>
+        </div>
+      </AppShell>
+    );
+  }
+
+  if (isPlatosError) {
+    return (
+      <AppShell breadcrumbs={["Atleta", "Checkout"]}>
+        <div className="p-8 flex items-center justify-center min-h-[300px]">
+          <span className="text-sm text-destructive font-semibold">Ocurrió un error al cargar los datos del catálogo. Por favor, intenta de nuevo.</span>
         </div>
       </AppShell>
     );

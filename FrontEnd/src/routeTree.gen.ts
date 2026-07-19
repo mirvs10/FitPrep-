@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ForgotRouteImport } from './routes/forgot'
+import { Route as BusinessRouteImport } from './routes/business'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TenantsIndexRouteImport } from './routes/tenants.index'
 import { Route as TenantIndexRouteImport } from './routes/tenant.index'
@@ -30,7 +31,6 @@ import { Route as AthleteOrdersRouteImport } from './routes/athlete.orders'
 import { Route as AthleteGoalsRouteImport } from './routes/athlete.goals'
 import { Route as AthleteCheckoutRouteImport } from './routes/athlete.checkout'
 import { Route as AthleteCartRouteImport } from './routes/athlete.cart'
-import { Route as AthleteAddMealRouteImport } from './routes/athlete.add-meal'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminSubscriptionsRouteImport } from './routes/admin.subscriptions'
 import { Route as AdminReportsRouteImport } from './routes/admin.reports'
@@ -54,6 +54,11 @@ const LoginRoute = LoginRouteImport.update({
 const ForgotRoute = ForgotRouteImport.update({
   id: '/forgot',
   path: '/forgot',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BusinessRoute = BusinessRouteImport.update({
+  id: '/business',
+  path: '/business',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -146,11 +151,6 @@ const AthleteCartRoute = AthleteCartRouteImport.update({
   path: '/athlete/cart',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AthleteAddMealRoute = AthleteAddMealRouteImport.update({
-  id: '/athlete/add-meal',
-  path: '/athlete/add-meal',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AdminUsersRoute = AdminUsersRouteImport.update({
   id: '/admin/users',
   path: '/admin/users',
@@ -199,6 +199,7 @@ const TenantMealsIdEditRoute = TenantMealsIdEditRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/business': typeof BusinessRoute
   '/forgot': typeof ForgotRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
@@ -206,7 +207,6 @@ export interface FileRoutesByFullPath {
   '/admin/reports': typeof AdminReportsRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/users': typeof AdminUsersRoute
-  '/athlete/add-meal': typeof AthleteAddMealRoute
   '/athlete/cart': typeof AthleteCartRoute
   '/athlete/checkout': typeof AthleteCheckoutRoute
   '/athlete/goals': typeof AthleteGoalsRoute
@@ -232,6 +232,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/business': typeof BusinessRoute
   '/forgot': typeof ForgotRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
@@ -239,7 +240,6 @@ export interface FileRoutesByTo {
   '/admin/reports': typeof AdminReportsRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/users': typeof AdminUsersRoute
-  '/athlete/add-meal': typeof AthleteAddMealRoute
   '/athlete/cart': typeof AthleteCartRoute
   '/athlete/checkout': typeof AthleteCheckoutRoute
   '/athlete/goals': typeof AthleteGoalsRoute
@@ -266,6 +266,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/business': typeof BusinessRoute
   '/forgot': typeof ForgotRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
@@ -273,7 +274,6 @@ export interface FileRoutesById {
   '/admin/reports': typeof AdminReportsRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/users': typeof AdminUsersRoute
-  '/athlete/add-meal': typeof AthleteAddMealRoute
   '/athlete/cart': typeof AthleteCartRoute
   '/athlete/checkout': typeof AthleteCheckoutRoute
   '/athlete/goals': typeof AthleteGoalsRoute
@@ -301,6 +301,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/business'
     | '/forgot'
     | '/login'
     | '/register'
@@ -308,7 +309,6 @@ export interface FileRouteTypes {
     | '/admin/reports'
     | '/admin/subscriptions'
     | '/admin/users'
-    | '/athlete/add-meal'
     | '/athlete/cart'
     | '/athlete/checkout'
     | '/athlete/goals'
@@ -334,6 +334,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/business'
     | '/forgot'
     | '/login'
     | '/register'
@@ -341,7 +342,6 @@ export interface FileRouteTypes {
     | '/admin/reports'
     | '/admin/subscriptions'
     | '/admin/users'
-    | '/athlete/add-meal'
     | '/athlete/cart'
     | '/athlete/checkout'
     | '/athlete/goals'
@@ -367,6 +367,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/business'
     | '/forgot'
     | '/login'
     | '/register'
@@ -374,7 +375,6 @@ export interface FileRouteTypes {
     | '/admin/reports'
     | '/admin/subscriptions'
     | '/admin/users'
-    | '/athlete/add-meal'
     | '/athlete/cart'
     | '/athlete/checkout'
     | '/athlete/goals'
@@ -401,6 +401,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BusinessRoute: typeof BusinessRoute
   ForgotRoute: typeof ForgotRoute
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
@@ -408,7 +409,6 @@ export interface RootRouteChildren {
   AdminReportsRoute: typeof AdminReportsRoute
   AdminSubscriptionsRoute: typeof AdminSubscriptionsRoute
   AdminUsersRoute: typeof AdminUsersRoute
-  AthleteAddMealRoute: typeof AthleteAddMealRoute
   AthleteCartRoute: typeof AthleteCartRoute
   AthleteCheckoutRoute: typeof AthleteCheckoutRoute
   AthleteGoalsRoute: typeof AthleteGoalsRoute
@@ -454,6 +454,13 @@ declare module '@tanstack/react-router' {
       path: '/forgot'
       fullPath: '/forgot'
       preLoaderRoute: typeof ForgotRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/business': {
+      id: '/business'
+      path: '/business'
+      fullPath: '/business'
+      preLoaderRoute: typeof BusinessRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -582,13 +589,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AthleteCartRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/athlete/add-meal': {
-      id: '/athlete/add-meal'
-      path: '/athlete/add-meal'
-      fullPath: '/athlete/add-meal'
-      preLoaderRoute: typeof AthleteAddMealRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/admin/users': {
       id: '/admin/users'
       path: '/admin/users'
@@ -657,6 +657,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BusinessRoute: BusinessRoute,
   ForgotRoute: ForgotRoute,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
@@ -664,7 +665,6 @@ const rootRouteChildren: RootRouteChildren = {
   AdminReportsRoute: AdminReportsRoute,
   AdminSubscriptionsRoute: AdminSubscriptionsRoute,
   AdminUsersRoute: AdminUsersRoute,
-  AthleteAddMealRoute: AthleteAddMealRoute,
   AthleteCartRoute: AthleteCartRoute,
   AthleteCheckoutRoute: AthleteCheckoutRoute,
   AthleteGoalsRoute: AthleteGoalsRoute,

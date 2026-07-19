@@ -1,2 +1,0 @@
-ALTER TABLE plato ADD COLUMN etiquetas VARCHAR(255);
-ALTER TABLE plato ADD COLUMN imagen_url VARCHAR(1000);

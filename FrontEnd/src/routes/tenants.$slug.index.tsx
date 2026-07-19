@@ -2,6 +2,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell, Card, Btn, Badge } from "@/components/layout/Shell";
 import { MapPin, Star, Clock, ShieldCheck } from "lucide-react";
 
+import { useQuery } from "@tanstack/react-query";
+import { negocioService } from "../lib/api";
+
 export const Route = createFileRoute("/tenants/$slug/")({
   head: ({ params }) => ({ meta: [{ title: `${params.slug} — FitPrep` }, { name: "description", content: `Perfil público del negocio ${params.slug} en FitPrep.` }] }),
   component: TenantProfile,
@@ -9,8 +12,25 @@ export const Route = createFileRoute("/tenants/$slug/")({
 
 function TenantProfile() {
   const { slug } = Route.useParams();
-  const name = slug === "coffeefit" ? "CoffeeFit" : slug === "primefit" ? "PrimeFit" : slug;
+
+  const { data: negocios, isLoading } = useQuery({
+    queryKey: ["negociosPublicos"],
+    queryFn: negocioService.getAll,
+  });
+
+  const negocio = negocios?.find((n: any) => n.slug === slug);
+  const name = negocio?.nombreComercial || slug;
   const initials = name.substring(0,2).toUpperCase();
+
+  if (isLoading) {
+    return (
+      <AppShell breadcrumbs={["Inicio", "Negocios", slug]}>
+        <div className="p-8 flex items-center justify-center min-h-[300px]">
+          <span className="text-sm text-muted-foreground">Cargando perfil...</span>
+        </div>
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell breadcrumbs={["Inicio", "Negocios", name]}>

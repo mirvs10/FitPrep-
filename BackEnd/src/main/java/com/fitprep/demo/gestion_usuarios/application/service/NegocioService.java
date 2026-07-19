@@ -38,6 +38,8 @@ public class NegocioService implements GestionarNegocioUseCase {
 
     @Override
     public java.util.List<Negocio> listarTodosLosNegocios() {
-        return negocioRepository.findAll();
+        return negocioRepository.findAll().stream()
+                .filter(n -> "ACTIVO".equals(n.getEstado()))
+                .collect(java.util.stream.Collectors.toList());
     }
 }

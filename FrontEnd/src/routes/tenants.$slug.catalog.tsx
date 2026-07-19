@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { platosService } from "../lib/api";
+import { platosService, negocioService } from "../lib/api";
 import { AppShell, PageHeader, Card, Btn, Badge } from "@/components/layout/Shell";
 import { Search, Filter, Plus } from "lucide-react";
 import { useState } from "react";
@@ -10,23 +10,28 @@ export const Route = createFileRoute("/tenants/$slug/catalog")({
   component: Catalog,
 });
 
-const slugToIdMap: Record<string, number> = {
-  "coffeefit": 1,
-  "primefit": 2
-};
-
 function Catalog() {
   const { slug } = Route.useParams();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTag, setSelectedTag] = useState("Todos");
 
-  const businessId = slugToIdMap[slug] || 1;
+  // Obtener negocio dinámicamente
+  const { data: negocios, isLoading: isLoadingNegocios } = useQuery({
+    queryKey: ["negociosPublicos"],
+    queryFn: negocioService.getAll,
+  });
+
+  const negocio = negocios?.find((n: any) => n.slug === slug);
+  const businessId = negocio?.id;
 
   // Cargar platos del backend
-  const { data: platos, isLoading } = useQuery({
+  const { data: platos, isLoading: isLoadingPlatos } = useQuery({
     queryKey: ["platosCatalogoPublico", businessId],
-    queryFn: () => platosService.listarPlatosDeNegocio(businessId),
+    queryFn: () => platosService.listarPlatosDeNegocio(businessId!),
+    enabled: !!businessId, // Solo cargar platos cuando ya sabemos el ID del negocio
   });
+  
+  const isLoading = isLoadingNegocios || isLoadingPlatos;
   
   // Filtrar platos por negocio, término de búsqueda y etiqueta
   const platosFiltrados = (platos || []).filter((p) => {

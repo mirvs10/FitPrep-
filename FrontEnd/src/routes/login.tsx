@@ -101,13 +101,25 @@ export function AuthLayout({ title, subtitle, children }: { title: string; subti
           <div className="size-9 rounded-lg bg-brand-500 grid place-items-center"><div className="size-4 rounded-full border-2 border-white" /></div>
           <span className="font-semibold tracking-tight text-lg">FitPrep</span>
         </Link>
-        <div>
-          <h2 className="text-3xl font-semibold tracking-tight leading-tight max-w-md text-balance">"Pasamos de Excel a FitPrep y redujimos el desperdicio en un 38%."</h2>
-          <div className="mt-6 flex items-center gap-3">
-            <div className="size-10 rounded-full bg-brand-100 grid place-items-center text-brand-700 font-semibold">LR</div>
-            <div>
-              <div className="text-sm font-medium">Laura Restrepo</div>
-              <div className="text-xs text-muted-foreground">CEO · FitKitchen Madrid</div>
+        <div className="space-y-12">
+          <div>
+            <h2 className="text-2xl font-semibold tracking-tight leading-tight max-w-md text-balance text-muted-foreground">"Pasamos de Excel a FitPrep y redujimos el desperdicio en un 38%."</h2>
+            <div className="mt-4 flex items-center gap-3">
+              <div className="size-9 rounded-full bg-brand-100 grid place-items-center text-brand-700 font-semibold text-xs">LR</div>
+              <div>
+                <div className="text-sm font-medium text-foreground">Laura Restrepo</div>
+                <div className="text-xs text-muted-foreground">CEO · FitKitchen</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h2 className="text-2xl font-semibold tracking-tight leading-tight max-w-md text-balance text-muted-foreground">"Logré organizar mis macros de la semana sin tener que cocinar ni un solo día."</h2>
+            <div className="mt-4 flex items-center gap-3">
+              <div className="size-9 rounded-full bg-blue-100 grid place-items-center text-blue-700 font-semibold text-xs">MA</div>
+              <div>
+                <div className="text-sm font-medium text-foreground">Martín Alonso</div>
+                <div className="text-xs text-muted-foreground">Atleta Aficionado</div>
+              </div>
             </div>
           </div>
         </div>
@@ -123,8 +135,35 @@ export function AuthLayout({ title, subtitle, children }: { title: string; subti
           <p className="mt-1.5 text-sm text-muted-foreground">{subtitle}</p>
           <div className="mt-8">{children}</div>
         </div>
+        <SeedButton />
       </div>
     </div>
+  );
+}
+
+function SeedButton() {
+  const [loading, setLoading] = useState(false);
+  const handleSeed = async () => {
+    try {
+      setLoading(true);
+      await fetch("http://localhost:8080/api/v1/admin/seed", { method: "POST" });
+      window.location.reload();
+    } catch (e) {
+      console.error(e);
+      alert("Error en el seeder");
+    } finally {
+      setLoading(false);
+    }
+  };
+  return (
+    <button 
+      onClick={handleSeed}
+      disabled={loading}
+      title="Inyectar datos mágicos de prueba"
+      className="absolute bottom-6 right-6 text-[10px] text-muted-foreground/30 hover:text-brand-500 hover:bg-brand-50 px-2 py-1 rounded transition-colors"
+    >
+      {loading ? "Cargando..." : "Demo"}
+    </button>
   );
 }
 

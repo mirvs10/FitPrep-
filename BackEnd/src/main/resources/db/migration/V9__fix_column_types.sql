@@ -1,4 +1,0 @@
-
-ALTER TABLE estadisticas_historicas ALTER COLUMN id TYPE BIGINT;
-ALTER TABLE suscripcion ALTER COLUMN id TYPE BIGINT;
-ALTER TABLE suscripcion ALTER COLUMN negocio_id TYPE BIGINT;

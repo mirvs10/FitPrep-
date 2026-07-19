@@ -34,6 +34,9 @@ public class AdminSuscripcionController {
         return ResponseEntity.ok(mapToResponse(negocio));
     }
 
+
+
+
     @PatchMapping("/{id}/suspender")
     public ResponseEntity<NegocioResponse> suspenderNegocio(@PathVariable Long id) {
         Negocio negocio = gestionarSuscripcionesUseCase.cambiarEstadoNegocio(id, "SUSPENDIDO");

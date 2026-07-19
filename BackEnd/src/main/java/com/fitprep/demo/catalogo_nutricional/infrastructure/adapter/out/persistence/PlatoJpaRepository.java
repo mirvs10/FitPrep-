@@ -10,7 +10,7 @@ import java.util.List;
  */
 interface PlatoJpaRepository extends JpaRepository<PlatoEntity, Long> {
     
-    @Query(value = "SELECT * FROM plato WHERE disponible = true", nativeQuery = true)
+    @Query(value = "SELECT p.* FROM plato p JOIN negocio n ON p.negocio_id = n.id WHERE p.disponible = true AND n.estado = 'ACTIVO'", nativeQuery = true)
     List<PlatoEntity> findAllCrossTenant();
 
     @Query(value = "SELECT * FROM plato WHERE id = :id", nativeQuery = true)

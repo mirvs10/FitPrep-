@@ -13,12 +13,12 @@ export const Route = createFileRoute("/athlete/orders")({
 function Orders() {
   const [selectedPlan, setSelectedPlan] = useState<PlanSemanalResponse | null>(null);
 
-  const { data: planes, isLoading } = useQuery({
+  const { data: planes, isLoading, isError: isPlanesError } = useQuery({
     queryKey: ["misPlanes"],
     queryFn: planesService.getMisPlanes,
   });
 
-  const { data: platos } = useQuery({
+  const { data: platos, isError: isPlatosError } = useQuery({
     queryKey: ["catalogoPlatosGeneral"],
     queryFn: platosService.listarPlatosGenerales,
   });
@@ -48,6 +48,10 @@ function Orders() {
               {isLoading ? (
                 <tr>
                   <td colSpan={7} className="px-5 py-8 text-center text-sm text-muted-foreground">Cargando historial...</td>
+                </tr>
+              ) : isPlanesError || isPlatosError ? (
+                <tr>
+                  <td colSpan={7} className="px-5 py-8 text-center text-sm text-destructive font-semibold">Ocurrió un error al cargar el historial. Por favor, intenta de nuevo.</td>
                 </tr>
               ) : planes && planes.length > 0 ? (
                 planes.map((plan) => {

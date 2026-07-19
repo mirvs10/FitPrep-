@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { platosService, authService } from "../lib/api";
+import { platosService, authService, negocioService } from "../lib/api";
 import { useState, useEffect } from "react";
 import { AppShell, Card, Btn, Badge, ProgressBar } from "@/components/layout/Shell";
 import { Star, Clock, Flame, Heart, ArrowLeft } from "lucide-react";
@@ -114,9 +114,7 @@ function MealDetail() {
             <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
               <span className="flex items-center gap-1"><Star className="size-3 fill-amber-400 text-amber-400" /> 4.8 • 24 reseñas</span>
               <span className="flex items-center gap-1"><Clock className="size-3" /> Listo en 24h</span>
-              <Link to="/tenants/$slug" params={{ slug: plato.negocioId === 2 ? 'primefit' : 'coffeefit' }} className="flex items-center gap-1 font-semibold text-brand-600 hover:underline ml-2">
-                Visitar Perfil del Negocio 
-              </Link>
+              <NegocioLink negocioId={plato.negocioId} />
             </div>
             
             <p className="mt-5 text-sm text-muted-foreground leading-relaxed">
@@ -166,5 +164,24 @@ function Macro({ label, value, of, pct, tone = "brand" }: { label: string; value
       </div>
       <ProgressBar value={pct} tone={tone} />
     </div>
+  );
+}
+
+function NegocioLink({ negocioId }: { negocioId: number }) {
+  const { data: negocios, isLoading, isError } = useQuery({
+    queryKey: ["negociosPublicos"],
+    queryFn: negocioService.getAll,
+  });
+
+  if (isLoading) return <span className="text-muted-foreground ml-2 text-xs">Cargando perfil...</span>;
+  if (isError || !negocios) return null;
+
+  const negocio = negocios.find((n: any) => n.id === negocioId);
+  if (!negocio) return null;
+
+  return (
+    <Link to="/tenants/$slug" params={{ slug: negocio.slug }} className="flex items-center gap-1 font-semibold text-brand-600 hover:underline ml-2">
+      Visitar Perfil del Negocio 
+    </Link>
   );
 }
