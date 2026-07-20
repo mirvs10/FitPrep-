@@ -16,8 +16,14 @@ public class DemoApplication {
 	}
 
 	@Bean
-	CommandLineRunner initSuperAdmin(UsuarioRepositoryPort usuarioRepository, PasswordHasher passwordHasher) {
+	CommandLineRunner initSuperAdmin(UsuarioRepositoryPort usuarioRepository, PasswordHasher passwordHasher, org.springframework.jdbc.core.JdbcTemplate jdbcTemplate) {
 		return args -> {
+			// Ensure default tenant exists
+			Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM negocio WHERE id = 1", Integer.class);
+			if (count != null && count == 0) {
+				jdbcTemplate.update("INSERT INTO negocio (id, nombre_comercial, slug, ruc, ciudad) VALUES (1, 'System', 'system', '00000000000', 'System')");
+			}
+
 			if (usuarioRepository.findByEmail("admin@fitprep.com").isEmpty()) {
 				Usuario admin = Usuario.builder()
 						.nombres("Super")
