@@ -16,11 +16,11 @@ public class DatabaseSeederService {
     @Transactional
     public void seedDatabase() {
         // Limpiar
-        jdbcTemplate.execute("TRUNCATE TABLE detalle_plan, plan_semanal, linea_pedido, pedido_ecommerce CASCADE;");
-        jdbcTemplate.execute("TRUNCATE TABLE suscripcion CASCADE;");
-        jdbcTemplate.execute("TRUNCATE TABLE plato CASCADE;");
-        jdbcTemplate.execute("TRUNCATE TABLE usuario CASCADE;");
-        jdbcTemplate.execute("TRUNCATE TABLE negocio CASCADE;");
+        jdbcTemplate.execute("TRUNCATE TABLE detalle_plan, plan_semanal, linea_pedido, pedido_ecommerce RESTART IDENTITY CASCADE;");
+        jdbcTemplate.execute("TRUNCATE TABLE suscripcion RESTART IDENTITY CASCADE;");
+        jdbcTemplate.execute("TRUNCATE TABLE plato RESTART IDENTITY CASCADE;");
+        jdbcTemplate.execute("TRUNCATE TABLE usuario RESTART IDENTITY CASCADE;");
+        jdbcTemplate.execute("TRUNCATE TABLE negocio RESTART IDENTITY CASCADE;");
 
         // Insertar Negocios
         jdbcTemplate.execute("INSERT INTO negocio (id, nombre_comercial, slug, ruc, telefono, estado, plan, ciudad, fecha_registro) VALUES " +
@@ -50,8 +50,8 @@ public class DatabaseSeederService {
         jdbcTemplate.execute("SELECT setval(pg_get_serial_sequence('plato', 'id'), (SELECT MAX(id) FROM plato));");
 
         // Insertar Plan y Detalles de Prueba para poblar Dashboards
-        jdbcTemplate.execute("INSERT INTO plan_semanal (id, negocio_id, usuario_id, fecha_inicio_semana, estado_pago, monto_total) VALUES " +
-                "(1, 2, 4, '2026-07-06', 'APROBADO', 87.50);");
+        jdbcTemplate.execute("INSERT INTO plan_semanal (id, negocio_id, usuario_id, fecha_inicio_semana, estado_pago, monto_total, fecha_creacion) VALUES " +
+                "(1, 2, 4, '2026-07-06', 'APROBADO', 87.50, CURRENT_TIMESTAMP);");
         
         jdbcTemplate.execute("INSERT INTO detalle_plan (plan_semanal_id, plato_id, dia_semana, tipo_comida, cantidad) VALUES " +
                 "(1, 1, 'LUNES', 'DESAYUNO', 1), " +
@@ -62,7 +62,7 @@ public class DatabaseSeederService {
         jdbcTemplate.execute("SELECT setval(pg_get_serial_sequence('detalle_plan', 'id'), (SELECT MAX(id) FROM detalle_plan));");
 
         // Insertar Estadisticas Historicas (MRR)
-        jdbcTemplate.execute("TRUNCATE TABLE estadisticas_historicas CASCADE;");
+        jdbcTemplate.execute("TRUNCATE TABLE estadisticas_historicas RESTART IDENTITY CASCADE;");
         jdbcTemplate.execute("INSERT INTO estadisticas_historicas (fecha, mrr, churn_rate, nuevos_negocios) VALUES " +
                 "('2026-01', 500.00, 1.2, 5), " +
                 "('2026-02', 650.00, 1.5, 8), " +
