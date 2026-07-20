@@ -13,9 +13,15 @@ import java.util.List;
 @Service
 public class JwtService {
 
-    private static final String SECRET_KEY = "FitprepSuperSecretKeyForJWTAuthThatMustBeLongAndSecure";
-    private final Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
-    private final JWTVerifier verifier = JWT.require(algorithm).build();
+    private final String secretKey;
+    private final Algorithm algorithm;
+    private final JWTVerifier verifier;
+
+    public JwtService(@org.springframework.beans.factory.annotation.Value("${jwt.secret:FitprepSuperSecretKeyForJWTAuthThatMustBeLongAndSecure}") String secretKey) {
+        this.secretKey = secretKey;
+        this.algorithm = Algorithm.HMAC256(this.secretKey);
+        this.verifier = JWT.require(this.algorithm).build();
+    }
 
     public String generateToken(String username, List<String> roles, String tenantId) {
         return JWT.create()
