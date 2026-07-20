@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { authService } from "../lib/api";
+import { authService, api } from "../lib/api";
 
 export const Route = createFileRoute("/login")({
   head: () => ({ meta: [{ title: "Ingresar — FitPrep" }, { name: "description", content: "Accede a tu cuenta de FitPrep." }] }),
@@ -146,7 +146,7 @@ function SeedButton() {
   const handleSeed = async () => {
     try {
       setLoading(true);
-      await fetch("http://localhost:8080/api/v1/admin/seed", { method: "POST" });
+      await api.post("/api/v1/admin/seed");
       window.location.reload();
     } catch (e) {
       console.error(e);
