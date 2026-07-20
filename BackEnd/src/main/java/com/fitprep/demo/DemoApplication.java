@@ -25,9 +25,9 @@ public class DemoApplication {
 						.email("admin@fitprep.com")
 						.passwordHash(passwordHasher.hash("123456"))
 						.rol("ADMIN")
-						.negocioId(0)
+						.negocioId(1)
 						.build();
-				usuarioRepository.saveWithTenant(admin, 0);
+				usuarioRepository.saveWithTenant(admin, 1);
 				System.out.println("✅ SuperAdmin creado correctamente (admin@fitprep.com / 123456)");
 			}
 		};
