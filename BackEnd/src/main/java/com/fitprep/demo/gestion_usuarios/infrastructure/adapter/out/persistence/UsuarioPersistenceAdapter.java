@@ -58,6 +58,7 @@ public class UsuarioPersistenceAdapter implements UsuarioRepositoryPort {
     }
     
     @Override
+    @org.springframework.transaction.annotation.Transactional
     public Usuario saveWithTenant(Usuario usuario, Integer tenantId) {
         String previousTenant = TenantContext.getCurrentTenant();
         try {
